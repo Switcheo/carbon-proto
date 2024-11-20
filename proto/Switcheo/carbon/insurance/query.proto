@@ -1,0 +1,74 @@
+syntax = "proto3";
+package Switcheo.carbon.insurance;
+
+import "cosmos/base/v1beta1/coin.proto";
+
+import "google/api/annotations.proto";
+import "gogoproto/gogo.proto";
+import "Switcheo/carbon/insurance/params.proto";
+import "cosmos/base/query/v1beta1/pagination.proto";
+import "Switcheo/carbon/insurance/fund.proto";
+
+// this line is used by starport scaffolding # 1
+
+option go_package = "github.com/Switcheo/carbon/x/insurance/types";
+option (gogoproto.goproto_getters_all) = false;
+
+// Query defines the gRPC querier service.
+service Query {
+  // this line is used by starport scaffolding # 2
+
+  // Get the insurance fund balance
+  rpc CoinBalances(QueryCoinBalancesRequest)
+      returns (QueryCoinBalancesResponse) {
+    option (google.api.http).get = "/carbon/insurance/v1/balance";
+  }
+
+  rpc Params(QueryParamsRequest) returns (QueryParamsResponse) {
+    option (google.api.http).get = "/carbon/insurance/v1/params";
+  }
+
+  rpc FundUtilization(QueryGetFundUtilizationRequest)
+      returns (QueryGetFundUtilizationResponse) {
+    option (google.api.http).get =
+        "/carbon/insurance/v1/fund_utilization/{market_id}";
+  }
+
+  rpc FundUtilizationAll(QueryAllFundUtilizationRequest)
+      returns (QueryAllFundUtilizationResponse) {
+    option (google.api.http).get = "/carbon/insurance/v1/fund_utilization";
+  }
+}
+
+// this line is used by starport scaffolding # 3
+
+message QueryCoinBalancesRequest {}
+
+message QueryCoinBalancesResponse {
+  repeated cosmos.base.v1beta1.Coin coins = 2 [
+    (gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.Coins",
+    (gogoproto.nullable) = false
+  ];
+}
+
+message QueryParamsRequest {}
+
+message QueryParamsResponse {
+  Params params = 1 [ (gogoproto.nullable) = false ];
+}
+
+message QueryGetFundUtilizationRequest { string market_id = 1; }
+
+message QueryGetFundUtilizationResponse {
+  FundUtilization fund_utilization = 1;
+}
+
+message QueryAllFundUtilizationRequest {
+  cosmos.base.query.v1beta1.PageRequest pagination = 1;
+}
+
+message QueryAllFundUtilizationResponse {
+  repeated FundUtilization fund_utilizations = 1
+      [ (gogoproto.nullable) = false ];
+  cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}

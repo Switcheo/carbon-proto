@@ -1,0 +1,32 @@
+syntax = "proto3";
+package Switcheo.carbon.order;
+
+option go_package = "github.com/Switcheo/carbon/x/order/types";
+option (gogoproto.goproto_getters_all) = false;
+
+import "gogoproto/gogo.proto";
+
+message IncomingEVMOrder {
+  string order_key = 1;
+  string order_id = 2;
+  bytes contract = 3;
+  bytes evm_creator = 4;
+}
+
+message QueryEVMOrderQueue {
+  bytes contract_address = 1;
+  repeated QueryEVMOrderRequest requests = 2 [ (gogoproto.nullable) = false ];
+}
+
+message QueryEVMOrderRequest {
+  string order_id = 1;
+  string order_key = 2;
+  bytes caller = 3;
+}
+
+message EVMContract {
+  uint64 version = 1;
+  string contract_type = 2;
+  string address = 3;
+  bool active = 4;
+}

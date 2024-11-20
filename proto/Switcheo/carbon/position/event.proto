@@ -1,0 +1,28 @@
+syntax = "proto3";
+package Switcheo.carbon.position;
+
+option go_package = "github.com/Switcheo/carbon/x/position/types";
+option (gogoproto.goproto_getters_all) = false;
+
+import "gogoproto/gogo.proto";
+import "Switcheo/carbon/position/position.proto";
+import "google/protobuf/timestamp.proto";
+
+message PositionEvent {
+  Position position = 1 [ (gogoproto.nullable) = false ];
+  uint64 id = 2;
+  string type = 3;
+  string allocated_margin_denom = 4;
+  string allocated_margin_amount = 5 [
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false
+  ];
+  uint64 updated_block_height = 6
+      [ (gogoproto.moretags) = "db:\"updated_block_height\"" ];
+  uint64 trade_id = 7 [ (gogoproto.moretags) = "db:\"trade_id\"" ];
+  uint64 update_reason = 8;
+}
+
+message OpenInterestEvent {
+  OpenInterest open_interest = 1 [ (gogoproto.nullable) = false ];
+}

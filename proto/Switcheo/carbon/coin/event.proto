@@ -1,0 +1,89 @@
+syntax = "proto3";
+package Switcheo.carbon.coin;
+
+option go_package = "github.com/Switcheo/carbon/x/coin/types";
+
+import "gogoproto/gogo.proto";
+import "Switcheo/carbon/coin/group.proto";
+import "Switcheo/carbon/coin/token.proto";
+
+option (gogoproto.goproto_getters_all) = false;
+
+message NewTokenEvent {
+  Token token = 1 [ (gogoproto.nullable) = false ];
+  string type = 2;
+}
+
+message SyncTokenEvent { Token token = 1 [ (gogoproto.nullable) = false ]; }
+
+message BindTokenEvent {
+  string source_denom = 1;
+  string wrapped_denom = 2;
+}
+
+message UnbindTokenEvent { string wrapped_denom = 1; }
+
+message LinkTokenEvent {
+  Token token = 1 [ (gogoproto.nullable) = false ];
+  string type = 2;
+}
+
+message NewGroupEvent {
+  TokenGroup token_group = 1 [
+    (gogoproto.nullable) = false,
+    (gogoproto.moretags) = "db:\"token_group\""
+  ];
+}
+
+message UpdateGroupEvent {
+  TokenGroup token_group = 1 [
+    (gogoproto.nullable) = false,
+    (gogoproto.moretags) = "db:\"token_group\""
+  ];
+}
+
+message RegisterToGroupEvent {
+  uint64 group_id = 1;
+  string denom = 2;
+}
+
+message DeregisterFromGroupEvent {
+  uint64 group_id = 1;
+  string denom = 2;
+}
+
+message SetGroupedTokenConfigEvent {
+  GroupedTokenConfig grouped_token_config = 1 [ (gogoproto.nullable) = false ];
+}
+
+message DepositToGroupEvent {
+  uint64 group_id = 1;
+  string denom = 2;
+  string amount = 3 [
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.moretags) = "db:\"amount\"",
+    (gogoproto.nullable) = false
+  ];
+  string cheque_denom = 4;
+  string cheque_amount = 5 [
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.moretags) = "db:\"cheque_amount\"",
+    (gogoproto.nullable) = false
+  ];
+}
+
+message WithdrawFromGroupEvent {
+  uint64 group_id = 1;
+  string denom = 2;
+  string amount = 3 [
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.moretags) = "db:\"amount\"",
+    (gogoproto.nullable) = false
+  ];
+  string cheque_denom = 4;
+  string cheque_amount = 5 [
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.moretags) = "db:\"cheque_amount\"",
+    (gogoproto.nullable) = false
+  ];
+}

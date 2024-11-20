@@ -1,0 +1,20 @@
+syntax = "proto3";
+package Switcheo.carbon.ccm;
+
+import "google/protobuf/wrappers.proto";
+import "gogoproto/gogo.proto";
+
+option go_package = "github.com/Switcheo/carbon/x/ccm/types";
+
+// Params defines the parameters for the ccm module.
+message Params {
+  // The field bool emit_zion_events = 1 was removed
+  reserved 1;
+}
+
+// ParamsToUpdate allows optional fields for Params.
+message ParamsToUpdate {
+  // Used to be google.protobuf.BoolValue emit_zion_events = 1 [
+  // (gogoproto.wktpointer) = true ];
+  reserved 1;
+}

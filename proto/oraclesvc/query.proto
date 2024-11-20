@@ -1,0 +1,16 @@
+syntax = "proto3";
+package oraclesvc;
+
+import "google/api/annotations.proto";
+import "gogoproto/gogo.proto";
+import "google/protobuf/empty.proto";
+import "tendermint/oracle/types.proto";
+
+option go_package = "github.com/Switcheo/carbon/services/oracle/types";
+option (gogoproto.goproto_getters_all) = false;
+
+// Query defines the gRPC querier service.
+service Query {
+  rpc StreamOracleData(stream tendermint.oracle.Vote)
+      returns (google.protobuf.Empty);
+}

@@ -1,0 +1,9 @@
+syntax = "proto3";
+package Switcheo.carbon.misc;
+import "gogoproto/gogo.proto";
+option go_package = "github.com/Switcheo/carbon/x/misc/types";
+option (gogoproto.goproto_getters_all) = false;
+
+message MessageType {
+  string message_type = 1 [ (gogoproto.moretags) = "db:\"message_type\"" ];
+}

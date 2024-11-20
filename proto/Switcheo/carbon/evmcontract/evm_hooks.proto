@@ -1,0 +1,39 @@
+syntax = "proto3";
+package Switcheo.carbon.evmcontract;
+import "cosmos_proto/cosmos.proto";
+
+// this line is used by starport scaffolding # proto/tx/import
+
+option go_package = "github.com/Switcheo/carbon/x/evmcontract/types";
+option (gogoproto.goproto_getters_all) = false;
+
+import "gogoproto/gogo.proto";
+
+message QueryBalanceRequest {
+  bytes carbon_address = 1;
+  bytes evm_address = 2;
+  string denom = 3;
+  bytes caller = 4;
+}
+
+message QueryBalanceQueue {
+  bytes contract_address = 1;
+  repeated QueryBalanceRequest requests = 2 [ (gogoproto.nullable) = false ];
+}
+
+message EVMContract {
+  uint64 version = 1;
+  string contract_type = 2;
+  string address = 3;
+  bool active = 4;
+}
+
+message ModuleEVMAddress {
+  string name = 1;
+  string address = 2;
+}
+
+message ModuleContracts {
+  string module_name = 1;
+  repeated EVMContract contracts = 2 [ (gogoproto.nullable) = false ];
+}

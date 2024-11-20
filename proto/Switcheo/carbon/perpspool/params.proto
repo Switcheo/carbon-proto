@@ -1,0 +1,52 @@
+syntax = "proto3";
+package Switcheo.carbon.perpspool;
+
+import "google/protobuf/wrappers.proto";
+import "gogoproto/gogo.proto";
+import "google/protobuf/duration.proto";
+option go_package = "github.com/Switcheo/carbon/x/perpspool/types";
+option (gogoproto.goproto_getters_all) = false;
+
+// Params defines the parameters for the module.
+message Params {
+  option (gogoproto.goproto_stringer) = false;
+  // requotes when index price fluctuation threshold exceeded (in ratio)
+  string quote_index_price_fluctuation_tolerance_ratio = 1 [
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
+    (gogoproto.nullable) = false
+  ];
+  // requotes after orders are x seconds old
+  google.protobuf.Duration quote_expiry_duration = 2
+      [ (gogoproto.stdduration) = true, (gogoproto.nullable) = false ];
+  // interval to take market utilization snapshot, e.g. every 60 seconds
+  google.protobuf.Duration market_utilization_snapshot_interval = 3
+      [ (gogoproto.stdduration) = true, (gogoproto.nullable) = false ];
+  // time duration window used to calculate the TWA market utilization e.g. last
+  // 24 hours
+  google.protobuf.Duration max_market_utilization_snapshot_window = 4
+      [ (gogoproto.stdduration) = true, (gogoproto.nullable) = false ];
+  uint64 nav_per_share_snapshots = 5;
+  google.protobuf.Duration nav_per_share_snapshot_interval = 6
+      [ (gogoproto.stdduration) = true, (gogoproto.nullable) = false ];
+  google.protobuf.Duration index_last_updated_at_threshold = 7
+      [ (gogoproto.stdduration) = true, (gogoproto.nullable) = false ];
+}
+
+message ParamsToUpdate {
+  string quote_index_price_fluctuation_tolerance_ratio = 1 [
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
+    (gogoproto.nullable) = true
+  ];
+  google.protobuf.Duration quote_expiry_duration = 2
+      [ (gogoproto.stdduration) = true, (gogoproto.nullable) = true ];
+  google.protobuf.Duration market_utilization_snapshot_interval = 3
+      [ (gogoproto.stdduration) = true, (gogoproto.nullable) = true ];
+  google.protobuf.Duration max_market_utilization_snapshot_window = 4
+      [ (gogoproto.stdduration) = true, (gogoproto.nullable) = true ];
+  google.protobuf.UInt64Value nav_per_share_snapshots = 5
+      [ (gogoproto.wktpointer) = true ];
+  google.protobuf.Duration nav_per_share_snapshot_interval = 6
+      [ (gogoproto.stdduration) = true, (gogoproto.nullable) = true ];
+  google.protobuf.Duration index_last_updated_at_threshold = 7
+      [ (gogoproto.stdduration) = true, (gogoproto.nullable) = true ];
+}

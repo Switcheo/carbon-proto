@@ -1,0 +1,22 @@
+syntax = "proto3";
+package Switcheo.carbon.liquiditypool;
+
+// this line is used by starport scaffolding # proto/tx/import
+
+option go_package = "github.com/Switcheo/carbon/x/liquiditypool/types";
+option (gogoproto.goproto_getters_all) = false;
+
+import "google/protobuf/wrappers.proto";
+import "gogoproto/gogo.proto";
+
+message Params {
+  option (gogoproto.goproto_stringer) = false;
+  uint64 reward_reduction_threshold = 1;
+  uint64 num_quotes = 2;
+}
+
+message ParamsToUpdate {
+  google.protobuf.UInt64Value reward_reduction_threshold = 1
+      [ (gogoproto.wktpointer) = true ];
+  google.protobuf.UInt64Value num_quotes = 2 [ (gogoproto.wktpointer) = true ];
+}

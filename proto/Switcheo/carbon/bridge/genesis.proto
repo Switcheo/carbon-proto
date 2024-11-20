@@ -1,0 +1,22 @@
+syntax = "proto3";
+package Switcheo.carbon.bridge;
+
+import "gogoproto/gogo.proto";
+import "Switcheo/carbon/bridge/params.proto";
+import "Switcheo/carbon/bridge/bridge.proto";
+
+option go_package = "github.com/Switcheo/carbon/x/bridge/types";
+
+// GenesisState defines the bridge module's genesis state.
+message GenesisState {
+  Params params = 1 [ (gogoproto.nullable) = false ];
+  repeated BridgeState bridge_states = 2 [ (gogoproto.nullable) = false ];
+  repeated Connection connections = 3 [ (gogoproto.nullable) = false ];
+  repeated ControllerContracts controller_contracts = 4
+      [ (gogoproto.nullable) = false ];
+  repeated ExternalTokenMapping external_token_mappings = 5
+      [ (gogoproto.nullable) = false ];
+  repeated string relayers = 6;
+  repeated bytes pending_action_keys = 7;
+  repeated bytes pending_actions = 8;
+}

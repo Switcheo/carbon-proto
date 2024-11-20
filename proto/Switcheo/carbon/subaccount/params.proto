@@ -1,0 +1,18 @@
+syntax = "proto3";
+package Switcheo.carbon.subaccount;
+
+import "google/protobuf/wrappers.proto";
+import "gogoproto/gogo.proto";
+import "google/protobuf/duration.proto";
+
+option go_package = "github.com/Switcheo/carbon/x/subaccount/types";
+
+message Params {
+  google.protobuf.Duration trading_fee_delegate_cooldown = 1
+      [ (gogoproto.stdduration) = true, (gogoproto.nullable) = false ];
+}
+
+message ParamsToUpdate {
+  google.protobuf.Duration trading_fee_delegate_cooldown = 1
+      [ (gogoproto.stdduration) = true, (gogoproto.nullable) = true ];
+}

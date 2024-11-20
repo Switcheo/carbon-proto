@@ -1,0 +1,19 @@
+syntax = "proto3";
+package Switcheo.carbon.sequence;
+
+import "gogoproto/gogo.proto";
+// this line is used by starport scaffolding # genesis/proto/import
+
+option go_package = "github.com/Switcheo/carbon/x/sequence/types";
+
+// GenesisState defines the sequence module's genesis state.
+message GenesisState {
+  // this line is used by starport scaffolding # genesis/proto/state
+
+  repeated Sequence sequences = 1 [ (gogoproto.nullable) = false ];
+}
+
+message Sequence {
+  string key = 1;
+  uint64 sequence_number = 2;
+}

@@ -1,0 +1,14 @@
+syntax = "proto3";
+package Switcheo.carbon.broker;
+
+option go_package = "github.com/Switcheo/carbon/x/broker/types";
+option (gogoproto.goproto_getters_all) = false;
+
+import "gogoproto/gogo.proto";
+
+message MinMaxBoundary {
+  uint64 min = 1 [ (gogoproto.moretags) = "db:\"minimum\"" ];
+  ;
+  uint64 max = 2 [ (gogoproto.moretags) = "db:\"maximum\"" ];
+  ;
+}

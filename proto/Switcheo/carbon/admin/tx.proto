@@ -1,0 +1,41 @@
+syntax = "proto3";
+package Switcheo.carbon.admin;
+
+// this line is used by starport scaffolding # proto/tx/import
+import "cosmos/msg/v1/msg.proto";
+import "cosmos_proto/cosmos.proto";
+import "amino/amino.proto";
+
+option go_package = "github.com/Switcheo/carbon/x/admin/types";
+
+// Msg defines the Msg service.
+service Msg {
+  option (cosmos.msg.v1.service) = true;
+
+  rpc InitiateAdminTransfer(MsgInitiateAdminTransfer)
+      returns (MsgInitiateAdminTransferResponse);
+  rpc AcceptAdminTransfer(MsgAcceptAdminTransfer)
+      returns (MsgAcceptAdminTransferResponse);
+  // this line is used by starport scaffolding # proto/tx/rpc
+}
+
+message MsgInitiateAdminTransfer {
+  option (cosmos.msg.v1.signer) = "creator";
+  option (amino.name) = "admin/InitiateAdminTransfer";
+
+  string creator = 1 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+  string recipient = 2 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+}
+
+message MsgInitiateAdminTransferResponse {}
+
+message MsgAcceptAdminTransfer {
+  option (cosmos.msg.v1.signer) = "creator";
+  option (amino.name) = "admin/AcceptAdminTransfer";
+
+  string creator = 1 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+}
+
+message MsgAcceptAdminTransferResponse {}
+
+// this line is used by starport scaffolding # proto/tx/message

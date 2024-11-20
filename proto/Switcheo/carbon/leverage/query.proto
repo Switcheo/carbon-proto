@@ -1,0 +1,40 @@
+syntax = "proto3";
+package Switcheo.carbon.leverage;
+
+import "google/api/annotations.proto";
+import "gogoproto/gogo.proto";
+import "Switcheo/carbon/leverage/leverage.proto";
+// this line is used by starport scaffolding # 1
+
+option go_package = "github.com/Switcheo/carbon/x/leverage/types";
+option (gogoproto.goproto_getters_all) = false;
+
+// Query defines the gRPC querier service.
+service Query {
+  // this line is used by starport scaffolding # 2
+  // Leverage returns the leverage which corresponds to the address and market
+  rpc Leverage(QueryGetLeverageRequest) returns (QueryGetLeverageResponse) {
+    option (google.api.http).get =
+        "/carbon/leverage/v1/leverages/{address}/{market_id}";
+  }
+  // LeverageAll returns all leverages for an address, defaults to 1
+  rpc LeverageAll(QueryAllLeverageRequest) returns (QueryAllLeverageResponse) {
+    option (google.api.http).get = "/carbon/leverage/v1/leverages/{address}";
+  }
+}
+
+// this line is used by starport scaffolding # 3
+message QueryGetLeverageRequest {
+  string address = 1;
+  string market_id = 2;
+}
+
+message QueryGetLeverageResponse {
+  MarketLeverage market_leverage = 1 [ (gogoproto.nullable) = false ];
+}
+
+message QueryAllLeverageRequest { string address = 1; }
+
+message QueryAllLeverageResponse {
+  repeated MarketLeverage market_leverages = 1 [ (gogoproto.nullable) = false ];
+}

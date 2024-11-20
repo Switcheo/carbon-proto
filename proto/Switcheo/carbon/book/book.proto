@@ -1,0 +1,41 @@
+syntax = "proto3";
+package Switcheo.carbon.book;
+
+option go_package = "github.com/Switcheo/carbon/x/book/types";
+option (gogoproto.goproto_getters_all) = false;
+
+import "gogoproto/gogo.proto";
+
+message OrderBookLevel {
+  string price = 1 [
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
+    (gogoproto.nullable) = false
+  ];
+  string total_quantity = 2 [
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false
+  ];
+  repeated string orders = 3;
+}
+
+message OrderBook {
+  string market_id = 1;
+  repeated OrderBookLevel asks = 2 [ (gogoproto.nullable) = false ];
+  repeated OrderBookLevel bids = 3 [ (gogoproto.nullable) = false ];
+}
+
+message StopBook {
+  string market_id = 1;
+  repeated StopOrder asks = 2 [ (gogoproto.nullable) = false ];
+  repeated StopOrder bids = 3 [ (gogoproto.nullable) = false ];
+  string trigger = 4;
+  string stop_type = 5;
+}
+
+message StopOrder {
+  string id = 1;
+  string stop_price = 2 [
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
+    (gogoproto.nullable) = false
+  ];
+}

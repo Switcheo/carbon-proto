@@ -1,0 +1,12 @@
+syntax = "proto3";
+package Switcheo.carbon.subaccount;
+
+option go_package = "github.com/Switcheo/carbon/x/subaccount/types";
+option (gogoproto.goproto_getters_all) = false;
+
+import "gogoproto/gogo.proto";
+
+message SubAccount_V2_26_0 {
+  string main_account = 1;
+  bool active = 2;
+}

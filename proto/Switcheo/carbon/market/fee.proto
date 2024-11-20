@@ -1,0 +1,91 @@
+syntax = "proto3";
+package Switcheo.carbon.market;
+
+option go_package = "github.com/Switcheo/carbon/x/market/types";
+option (gogoproto.goproto_getters_all) = false;
+
+import "gogoproto/gogo.proto";
+
+// A fee structure has multiple fee tiers are sorted by `required_stake`
+// and a single fee category. When a trade is executed, the fee tier with
+// the greatest required stake which is fulfilled by the user is used.
+//
+// There must always be at least one fee tier for the `spot` and `futures`
+// `market_type` fee category that has 0 `required_stake` and no
+// `whitelisted_address` so that it can act as the base fee for that market
+// type.
+message FeeStructure {
+  FeeCategory fee_category = 1 [ (gogoproto.nullable) = false ];
+  repeated FeeTier fee_tiers = 2 [ (gogoproto.nullable) = false ];
+}
+
+// The category for a given fee tier, identified by the
+// market being traded via `market_type` or `market_id`, and
+// optionally a `whitelisted_address`.
+message FeeCategory {
+  // Either `spot` or `futures` or nil. If nil, then
+  // a market_id must be provided.
+  string market_type = 1;
+  // Can be used to override the `market_type` based fee to give
+  // specific markets a certain fee discount.
+  // Note that if there is already a fee tier for the user's stake that
+  // results in a lower fee for a given trade, that fee structure will be used
+  // instead.
+  string market_id = 2;
+  // Optional parameter that can be used to give certain addresses
+  // additional fee tier(s) for the given `market_type` or `market_id`.
+  // Can only be used to reduce fees, not increase them. Can be used with module
+  // accounts.
+  string whitelisted_address = 4;
+}
+
+// A fee tier represents the trading fee for a user that meets the required
+// stake.
+message FeeTier {
+  // The required stake for a user for the fee tier to apply.
+  string required_stake = 1 [
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false
+  ];
+
+  // The taker and maker fee that applies when a trade is executed.
+  TradingFees trading_fees = 2 [ (gogoproto.nullable) = false ];
+}
+
+// The fees applied for each trade.
+//
+// Note that for greater `required_stake`, either the `taker_fee`
+// or `maker_fee` must be reduced.
+// Neither `taker_fee` nor `maker_fee` can be greater for
+// a greater `required_stake`.
+message TradingFees {
+  // The fee applied when the order is executed in the smame
+  // block greater as when it is triggered.
+  // Cannot be negative.
+  string taker_fee = 5 [
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
+    (gogoproto.nullable) = false
+  ];
+  // The fee or rebate (when negative) applied when the order is executed
+  // in a block greater than when it is triggered.
+  string maker_fee = 6 [
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
+    (gogoproto.nullable) = false
+  ];
+}
+
+// Allows non stake coins to count as part of the
+// `required_stake` in a fee tier.
+//
+// For each stake equivalance, the amount of coins for
+// the specificed denom in the user's available balance
+// at the time of the trade will be divided by the `ratio`
+// and added to his actual stake amount when checking
+// for fee tier feecategories.
+message StakeEquivalence {
+  string denom = 1;
+  string ratio = 2 [
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
+    (gogoproto.nullable) = false
+  ];
+}

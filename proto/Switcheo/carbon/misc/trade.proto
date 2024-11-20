@@ -1,0 +1,43 @@
+syntax = "proto3";
+package Switcheo.carbon.misc;
+
+option go_package = "github.com/Switcheo/carbon/x/misc/types";
+option (gogoproto.goproto_getters_all) = false;
+
+import "cosmos/base/v1beta1/coin.proto";
+import "cosmos_proto/cosmos.proto";
+import "google/protobuf/timestamp.proto";
+import "gogoproto/gogo.proto";
+
+message AccountTrade {
+  string order_id = 1 [ (gogoproto.moretags) = "db:\"order_id\"" ];
+  string market_id = 2 [ (gogoproto.moretags) = "db:\"market\"" ];
+  string side = 3 [ (gogoproto.moretags) = "db:\"side\"" ];
+  string quantity = 4 [
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.moretags) = "db:\"quantity\"",
+    (gogoproto.nullable) = false
+  ];
+  string price = 5 [
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
+    (gogoproto.moretags) = "db:\"price\"",
+    (gogoproto.nullable) = false
+  ];
+  string fee_amount = 6 [
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.moretags) = "db:\"fee_amount\"",
+    (gogoproto.nullable) = false
+  ];
+  string fee_denom = 7 [ (gogoproto.moretags) = "db:\"fee_denom\"" ];
+  string address = 8 [
+    (gogoproto.moretags) = "db:\"address\"",
+    (cosmos_proto.scalar) = "cosmos.AddressString"
+  ];
+  int64 block_height = 9 [ (gogoproto.moretags) = "db:\"block_height\"" ];
+  google.protobuf.Timestamp block_created_at = 10 [
+    (gogoproto.moretags) = "db:\"block_created_at\"",
+    (gogoproto.nullable) = false,
+    (gogoproto.stdtime) = true
+  ];
+  uint64 trade_id = 11 [ (gogoproto.moretags) = "db:\"trade_id\"" ];
+}

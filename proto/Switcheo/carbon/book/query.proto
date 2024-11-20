@@ -1,0 +1,101 @@
+syntax = "proto3";
+package Switcheo.carbon.book;
+
+import "google/api/annotations.proto";
+import "cosmos/base/query/v1beta1/pagination.proto";
+// this line is used by starport scaffolding # 1
+import "Switcheo/carbon/book/book.proto";
+import "gogoproto/gogo.proto";
+
+option go_package = "github.com/Switcheo/carbon/x/book/types";
+option (gogoproto.goproto_getters_all) = false;
+
+// Query defines the gRPC querier service.
+service Query {
+  // Get impact price for a market
+  rpc ImpactPrice(QueryImpactPriceRequest) returns (QueryImpactPriceResponse) {
+    option (google.api.http).get =
+        "/carbon/book/v1/impact_price/{market_id}/quote_amount/{quote_amount}";
+  }
+
+  // this line is used by starport scaffolding # 2
+
+  // Get combined order book for a market
+  rpc CombinedBook(QueryGetBookRequest) returns (QueryGetBookResponse) {
+    option (google.api.http).get = "/carbon/book/v1/books/{market_id}";
+  }
+
+  // Get concrete book for a market
+  rpc ConcreteBook(QueryGetBookRequest) returns (QueryGetBookResponse) {
+    option (google.api.http).get = "/carbon/book/v1/concrete_books/{market_id}";
+  }
+
+  // Get virtual order book for a market
+  rpc VirtualBook(QueryGetBookRequest) returns (QueryGetBookResponse) {
+    option (google.api.http).get = "/carbon/book/v1/virtual_books/{market_id}";
+  }
+
+  // Get stop order book for a market
+  rpc StopBook(QueryGetStopBookRequest) returns (QueryGetStopBookResponse) {
+    option (google.api.http).get = "/carbon/book/v1/stopbooks/{market_id}";
+  }
+
+  // Get combined order books for all markets
+  rpc CombinedBookAll(QueryAllBookRequest) returns (QueryAllBookResponse) {
+    option (google.api.http).get = "/carbon/book/v1/books";
+  }
+
+  // Get all stop order book for a market
+  rpc StopBookAll(QueryAllStopBookRequest) returns (QueryAllStopBookResponse) {
+    option (google.api.http).get = "/carbon/book/v1/stopbooks";
+  }
+}
+
+message QueryImpactPriceRequest {
+  string market_id = 1;
+  string quote_amount = 2;
+}
+
+message QueryImpactPriceResponse {
+  string impact_price = 1 [
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
+    (gogoproto.nullable) = false
+  ];
+  string base_amount = 2 [
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
+    (gogoproto.nullable) = false
+  ];
+  string quote_amount = 3 [
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
+    (gogoproto.nullable) = false
+  ];
+}
+
+// this line is used by starport scaffolding # 3
+message QueryGetBookRequest { string market_id = 1; }
+
+message QueryGetBookResponse {
+  OrderBook book = 1 [ (gogoproto.nullable) = false ];
+}
+
+message QueryAllBookRequest {
+  cosmos.base.query.v1beta1.PageRequest pagination = 1;
+}
+
+message QueryAllBookResponse {
+  repeated OrderBook books = 1;
+  cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+
+message QueryGetStopBookRequest { string market_id = 1; }
+
+message QueryGetStopBookResponse { repeated StopBook books = 1; }
+
+message QueryAllStopBookRequest {
+  cosmos.base.query.v1beta1.PageRequest pagination = 1;
+}
+
+message QueryAllStopBookResponse {
+  repeated StopBook books = 1;
+  cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}

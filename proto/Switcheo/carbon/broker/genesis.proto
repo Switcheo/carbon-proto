@@ -1,0 +1,17 @@
+syntax = "proto3";
+package Switcheo.carbon.broker;
+
+// this line is used by starport scaffolding # genesis/proto/import
+import "Switcheo/carbon/broker/amm.proto";
+import "gogoproto/gogo.proto";
+
+option go_package = "github.com/Switcheo/carbon/x/broker/types";
+option (gogoproto.goproto_getters_all) = false;
+
+// GenesisState defines the broker module's genesis state.
+message GenesisState {
+  // this line is used by starport scaffolding # genesis/proto/state
+  // this line is used by starport scaffolding # ibc/genesis/proto
+  repeated SpotAmm spot_amms = 1 [ (gogoproto.nullable) = false ];
+  repeated PerpsAmm perps_amms = 2 [ (gogoproto.nullable) = false ];
+}

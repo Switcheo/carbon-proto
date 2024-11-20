@@ -1,0 +1,15 @@
+syntax = "proto3";
+package Switcheo.carbon.liquidation;
+
+option go_package = "github.com/Switcheo/carbon/x/liquidation/types";
+option (gogoproto.goproto_getters_all) = false;
+
+import "gogoproto/gogo.proto";
+import "Switcheo/carbon/order/order.proto";
+import "Switcheo/carbon/liquidation/outstanding_position.proto";
+
+message QuoteChanges {
+  repeated order.Order create = 1 [ (gogoproto.nullable) = false ];
+  repeated OutstandingPosition update = 2 [ (gogoproto.nullable) = false ];
+  repeated string remove = 3;
+}

@@ -1,0 +1,170 @@
+syntax = "proto3";
+package Switcheo.carbon.market;
+
+option go_package = "github.com/Switcheo/carbon/x/market/types";
+option (gogoproto.goproto_getters_all) = false;
+
+import "google/protobuf/wrappers.proto";
+import "gogoproto/gogo.proto";
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/duration.proto";
+import "Switcheo/carbon/market/params.proto";
+
+message ControlledParams {
+  google.protobuf.Duration perpetuals_funding_interval = 1
+      [ (gogoproto.stdduration) = true, (gogoproto.nullable) = false ];
+}
+
+message Market {
+  string id = 1 [ (gogoproto.moretags) = "db:\"id\"" ];
+  string display_name = 2 [ (gogoproto.moretags) = "db:\"display_name\"" ];
+  string description = 3 [ (gogoproto.moretags) = "db:\"description\"" ];
+  string market_type = 4 [ (gogoproto.moretags) = "db:\"market_type\"" ];
+  string base = 5 [ (gogoproto.moretags) = "db:\"base\"" ];
+  string quote = 6 [ (gogoproto.moretags) = "db:\"quote\"" ];
+  int64 base_precision = 7 [ (gogoproto.moretags) = "db:\"base_precision\"" ];
+  int64 quote_precision = 8 [ (gogoproto.moretags) = "db:\"quote_precision\"" ];
+  string lot_size = 9 [
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.moretags) = "db:\"lot_size\"",
+    (gogoproto.nullable) = false
+  ];
+  string tick_size = 10 [
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
+    (gogoproto.moretags) = "db:\"tick_size\"",
+    (gogoproto.nullable) = false
+  ];
+  string min_quantity = 11 [
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.moretags) = "db:\"min_quantity\"",
+    (gogoproto.nullable) = false
+  ];
+  reserved 12; // used to be maker_fee, but deprecated
+  reserved 13; // used to be taker_fee, but deprecated
+  uint64 created_block_height = 14
+      [ (gogoproto.moretags) = "db:\"created_block_height\"" ];
+  // futures only
+  string risk_step_size = 100 [
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.moretags) = "db:\"risk_step_size\"",
+    (gogoproto.nullable) = false
+  ];
+  string initial_margin_base = 101 [
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
+    (gogoproto.moretags) = "db:\"initial_margin_base\"",
+    (gogoproto.nullable) = false
+  ];
+  string initial_margin_step = 102 [
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
+    (gogoproto.moretags) = "db:\"initial_margin_step\"",
+    (gogoproto.nullable) = false
+  ];
+  string maintenance_margin_ratio = 103 [
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
+    (gogoproto.moretags) = "db:\"maintenance_margin_ratio\"",
+    (gogoproto.nullable) = false
+  ];
+  string max_liquidation_order_ticket = 104 [
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.moretags) = "db:\"max_liquidation_order_ticket\"",
+    (gogoproto.nullable) = false
+  ];
+  google.protobuf.Duration max_liquidation_order_duration = 105 [
+    (gogoproto.moretags) = "db:\"max_liquidation_order_duration\"",
+    (gogoproto.nullable) = false,
+    (gogoproto.stdduration) = true
+  ];
+  string impact_size = 106 [
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.moretags) = "db:\"impact_size\"",
+    (gogoproto.nullable) = false
+  ];
+  uint32 mark_price_band = 107
+      [ (gogoproto.moretags) = "db:\"mark_price_band\"" ];
+  uint32 last_price_protected_band = 108
+      [ (gogoproto.moretags) = "db:\"last_price_protected_band\"" ];
+  string index_oracle_id = 109
+      [ (gogoproto.moretags) = "db:\"index_oracle_id\"" ];
+  google.protobuf.Timestamp expiry_time = 110 [
+    (gogoproto.stdtime) = true,
+    (gogoproto.moretags) = "db:\"expiry_time\"",
+    (gogoproto.nullable) = false
+  ];
+  bool is_active = 111 [ (gogoproto.moretags) = "db:\"is_active\"" ];
+  bool is_settled = 112 [ (gogoproto.moretags) = "db:\"is_settled\"" ];
+  uint64 closed_block_height = 113
+      [ (gogoproto.moretags) = "db:\"closed_block_height\"" ];
+  uint32 trading_bandwidth = 114
+      [ (gogoproto.moretags) = "db:\"trading_bandwidth\"" ];
+  string max_open_interest = 115 [
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.moretags) = "db:\"max_open_interest\"",
+    (gogoproto.nullable) = false
+  ];
+}
+
+message MarketParams {
+  string id = 1;
+  google.protobuf.StringValue display_name = 2
+      [ (gogoproto.wktpointer) = true ];
+  google.protobuf.StringValue description = 3 [ (gogoproto.wktpointer) = true ];
+  string lot_size = 10 [
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = true
+  ];
+  string tick_size = 11 [
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
+    (gogoproto.nullable) = true
+  ];
+  string min_quantity = 12 [
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = true
+  ];
+  reserved 13; // used to be maker_fee, but deprecated
+  reserved 14; // used to be taker_fee, but deprecated
+  // futures only
+  string risk_step_size = 100 [
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = true
+  ];
+  string initial_margin_base = 101 [
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
+    (gogoproto.nullable) = true
+  ];
+  string initial_margin_step = 102 [
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
+    (gogoproto.nullable) = true
+  ];
+  string maintenance_margin_ratio = 103 [
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
+    (gogoproto.nullable) = true
+  ];
+  string max_liquidation_order_ticket = 104 [
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = true
+  ];
+  google.protobuf.Duration max_liquidation_order_duration = 105
+      [ (gogoproto.nullable) = true, (gogoproto.stdduration) = true ];
+  string impact_size = 106 [
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = true
+  ];
+  google.protobuf.UInt32Value mark_price_band = 107
+      [ (gogoproto.wktpointer) = true ];
+  google.protobuf.UInt32Value last_price_protected_band = 108
+      [ (gogoproto.wktpointer) = true ];
+  google.protobuf.BoolValue is_active = 111 [ (gogoproto.wktpointer) = true ];
+  google.protobuf.UInt32Value trading_bandwidth = 114
+      [ (gogoproto.wktpointer) = true ];
+  google.protobuf.Timestamp expiry_time = 115 [
+    (gogoproto.stdtime) = true,
+    (gogoproto.moretags) = "db:\"expiry_time\"",
+    (gogoproto.nullable) = true
+  ];
+  string max_open_interest = 116 [
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = true
+  ];
+}
+
+message IncomingSpotMarketsToDisable { repeated string ids = 1; }

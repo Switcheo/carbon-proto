@@ -1,0 +1,21 @@
+syntax = "proto3";
+package Switcheo.carbon.order;
+
+// this line is used by starport scaffolding # proto/tx/import
+
+option go_package = "github.com/Switcheo/carbon/x/order/types";
+option (gogoproto.goproto_getters_all) = false;
+
+import "google/protobuf/wrappers.proto";
+import "gogoproto/gogo.proto";
+import "google/protobuf/duration.proto";
+
+message Params {
+  option (gogoproto.goproto_stringer) = false;
+  uint32 max_referral_commission = 1;
+}
+
+message ParamsToUpdate {
+  google.protobuf.UInt32Value max_referral_commission = 1
+      [ (gogoproto.wktpointer) = true ];
+}

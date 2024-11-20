@@ -1,0 +1,49 @@
+syntax = "proto3";
+package Switcheo.carbon.liquiditypool;
+
+// this line is used by starport scaffolding # genesis/proto/import
+
+import "gogoproto/gogo.proto";
+import "Switcheo/carbon/liquiditypool/liquiditypool.proto";
+import "Switcheo/carbon/liquiditypool/reward.proto";
+import "Switcheo/carbon/liquiditypool/params.proto";
+import "cosmos/base/v1beta1/coin.proto";
+
+option go_package = "github.com/Switcheo/carbon/x/liquiditypool/types";
+option (gogoproto.goproto_getters_all) = false;
+
+// GenesisState defines the liquiditypool module's genesis state.
+message GenesisState {
+  // params defines all the paramaters of the module.
+  Params params = 11 [ (gogoproto.nullable) = false ];
+
+  repeated Pool pools = 1 [ (gogoproto.nullable) = false ];
+
+  RewardCurve reward_curve = 2 [ (gogoproto.nullable) = false ];
+  CommitmentCurve commitment_curve = 3 [ (gogoproto.nullable) = false ];
+  RewardWeights reward_weights = 4 [ (gogoproto.nullable) = false ];
+  repeated CommitmentRecord commitments = 5 [
+    (gogoproto.moretags) = "yaml:\"commitments\"",
+    (gogoproto.nullable) = false
+  ];
+  repeated TotalCommitmentRecord total_commitments = 6 [
+    (gogoproto.moretags) = "yaml:\"total_commitments\"",
+    (gogoproto.nullable) = false
+  ];
+  repeated CommitmentExpiriesRecord commitment_expiries = 7 [
+    (gogoproto.moretags) = "yaml:\"commitment_expiries\"",
+    (gogoproto.nullable) = false
+  ];
+  reserved 8; // deprecated reward_histories
+  reserved 9; // deprecated last_claims
+  AllocatedRewards allocated_rewards = 10 [
+    (gogoproto.moretags) = "yaml:\"allocated_rewards\"",
+    (gogoproto.nullable) = false
+  ];
+  repeated AccumulatedRewardsRecord accumulated_rewards = 13 [
+    (gogoproto.moretags) = "yaml:\"accumulated_rewards\"",
+    (gogoproto.nullable) = false
+  ];
+
+  repeated PoolRoute pool_routes = 12 [ (gogoproto.nullable) = false ];
+}

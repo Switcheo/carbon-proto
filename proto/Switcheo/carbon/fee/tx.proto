@@ -1,0 +1,68 @@
+syntax = "proto3";
+package Switcheo.carbon.fee;
+
+import "cosmos/msg/v1/msg.proto";
+import "cosmos_proto/cosmos.proto";
+import "amino/amino.proto";
+import "gogoproto/gogo.proto";
+import "Switcheo/carbon/fee/fee.proto";
+
+option go_package = "github.com/Switcheo/carbon/x/fee/types";
+option (gogoproto.goproto_getters_all) = false;
+
+// Msg defines the Msg service.
+service Msg {
+  option (cosmos.msg.v1.service) = true;
+  // this line is used by starport scaffolding # proto/tx/rpc
+  rpc SetMsgGasCost(MsgSetGasCost) returns (MsgSetGasCostResponse);
+  rpc SetMinGasPrice(MsgSetMinGasPrice) returns (MsgSetMinGasPriceResponse);
+  rpc RemoveMsgGasCost(MsgRemoveGasCost) returns (MsgRemoveGasCostResponse);
+  rpc RemoveMinGasPrice(MsgRemoveMinGasPrice)
+      returns (MsgRemoveMinGasPriceResponse);
+}
+
+// this line is used by starport scaffolding # proto/tx/message
+
+message MsgSetGasCost {
+  option (cosmos.msg.v1.signer) = "creator";
+  option (amino.name) = "fee/SetMsgGasCost";
+  option (gogoproto.goproto_getters) = false;
+
+  string creator = 1 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+  MsgGasCost set_gas_cost_params = 2 [ (gogoproto.nullable) = false ];
+}
+
+message MsgSetGasCostResponse {}
+
+message MsgSetMinGasPrice {
+  option (cosmos.msg.v1.signer) = "creator";
+  option (amino.name) = "fee/SetMinGasPrice";
+  option (gogoproto.goproto_getters) = false;
+
+  string creator = 1 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+  MinGasPrice set_min_gas_price_params = 2 [ (gogoproto.nullable) = false ];
+}
+
+message MsgSetMinGasPriceResponse {}
+
+message MsgRemoveGasCost {
+  option (cosmos.msg.v1.signer) = "creator";
+  option (amino.name) = "fee/RemoveMsgGasCost";
+  option (gogoproto.goproto_getters) = false;
+
+  string creator = 1 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+  string msg_type = 2;
+}
+
+message MsgRemoveGasCostResponse {}
+
+message MsgRemoveMinGasPrice {
+  option (cosmos.msg.v1.signer) = "creator";
+  option (amino.name) = "fee/RemoveMinGasPrice";
+  option (gogoproto.goproto_getters) = false;
+
+  string creator = 1 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+  string denom = 2;
+}
+
+message MsgRemoveMinGasPriceResponse {}

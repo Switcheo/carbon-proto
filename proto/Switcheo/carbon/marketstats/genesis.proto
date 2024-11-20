@@ -1,0 +1,13 @@
+syntax = "proto3";
+package Switcheo.carbon.marketstats;
+
+import "gogoproto/gogo.proto";
+// this line is used by starport scaffolding # genesis/proto/import
+
+option go_package = "github.com/Switcheo/carbon/x/marketstats/types";
+
+// GenesisState defines the marketstats module's genesis state.
+message GenesisState {
+  reserved 1; // used to be params, but deprecated
+  // this line is used by starport scaffolding # genesis/proto/state
+}

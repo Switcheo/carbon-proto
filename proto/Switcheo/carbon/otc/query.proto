@@ -1,0 +1,89 @@
+syntax = "proto3";
+package Switcheo.carbon.otc;
+
+import "google/api/annotations.proto";
+import "cosmos/base/query/v1beta1/pagination.proto";
+import "gogoproto/gogo.proto";
+import "Switcheo/carbon/otc/rfq.proto";
+import "Switcheo/carbon/otc/quote.proto";
+import "Switcheo/carbon/otc/params.proto";
+import "cosmos_proto/cosmos.proto";
+
+option go_package = "github.com/Switcheo/carbon/x/otc/types";
+option (gogoproto.goproto_getters_all) = false;
+
+// Query defines the gRPC querier service.
+service Query {
+  rpc Params(QueryParamsRequest) returns (QueryParamsResponse) {
+    option (google.api.http).get = "/carbon/otc/v1/params";
+  }
+  rpc Rfq(QueryRfqRequest) returns (QueryRfqResponse) {
+    option (google.api.http).get = "/carbon/otc/v1/rfqs/{id}";
+  }
+  rpc RfqAll(QueryAllRfqRequest) returns (QueryAllRfqResponse) {
+    option (google.api.http).get = "/carbon/otc/v1/rfqs";
+  }
+  rpc Quote(QueryQuoteRequest) returns (QueryQuoteResponse) {
+    option (google.api.http).get = "/carbon/otc/v1/quotes/{id}";
+  }
+  rpc QuoteAll(QueryAllQuoteRequest) returns (QueryAllQuoteResponse) {
+    option (google.api.http).get = "/carbon/otc/v1/quotes";
+  }
+}
+
+// QueryParamsRequest is request type for the Query/Params RPC method.
+message QueryParamsRequest {}
+
+// QueryParamsResponse is response type for the Query/Params RPC method.
+message QueryParamsResponse {
+  Params params = 1 [ (gogoproto.nullable) = false ];
+}
+
+// QueryRfq is request type for the Query/Rfq RPC method and takes in a RFQ ID.
+message QueryRfqRequest { string id = 1; }
+
+// QueryRfq is response type for the Query/Rfq RPC method and returns a RFQ.
+message QueryRfqResponse { RfqWithStatus rfq = 1; }
+
+// QueryAllRfq is request type for the Query/Rfqs RPC method and takes in
+// filter options.
+message QueryAllRfqRequest {
+  string requester = 1 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+  string buy_denom = 2;
+  string status = 3;
+  cosmos.base.query.v1beta1.PageRequest pagination = 4;
+}
+
+// QueryAllRfq is response type for the Query/Rfqs RPC method and
+// returns an array of RFQs.
+message QueryAllRfqResponse {
+  repeated RfqWithStatus rfqs = 1 [ (gogoproto.nullable) = false ];
+  cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+
+// QueryQuote is request type for the Query/Quote RPC method and takes in a
+// Quote ID.
+message QueryQuoteRequest { string id = 1; }
+
+// QueryQuote is response type for the Query/Quote RPC method and
+// returns a Quote.
+message QueryQuoteResponse { QuoteWithStatus quote = 1; }
+
+// QueryAllQuote is request type for the Query/Quotes RPC method and takes in
+// filter options.
+message QueryAllQuoteRequest {
+  string quoter = 1 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+  string rfq_id = 2;
+  string denom = 3;
+  string min_quantity = 4;
+  string max_quantity = 5;
+  string status = 6;
+  cosmos.base.query.v1beta1.PageRequest pagination = 7;
+}
+
+// QueryQuote is response type for the Query/Quotes RPC method and
+// returns an array of Quotes.
+message QueryAllQuoteResponse {
+  repeated QuoteWithStatus quotes = 1 [ (gogoproto.nullable) = false ];
+  cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}

@@ -1,0 +1,25 @@
+syntax = "proto3";
+package Switcheo.carbon.otc;
+
+import "Switcheo/carbon/otc/rfq.proto";
+import "Switcheo/carbon/otc/quote.proto";
+import "google/protobuf/timestamp.proto";
+
+option go_package = "github.com/Switcheo/carbon/x/otc/types";
+option (gogoproto.goproto_getters_all) = false;
+
+import "gogoproto/gogo.proto";
+
+message QuoteEvent {
+  Quote quote = 1 [ (gogoproto.nullable) = false ];
+  string status = 2;
+  uint64 updated_block_height = 3
+      [ (gogoproto.moretags) = "db:\"updated_block_height\"" ];
+}
+
+message RfqEvent {
+  Rfq rfq = 1 [ (gogoproto.nullable) = false ];
+  string status = 2;
+  uint64 updated_block_height = 3
+      [ (gogoproto.moretags) = "db:\"updated_block_height\"" ];
+}

@@ -1,0 +1,36 @@
+syntax = "proto3";
+package Switcheo.carbon.fee;
+
+option go_package = "github.com/Switcheo/carbon/x/fee/types";
+option (gogoproto.goproto_getters_all) = false;
+
+import "gogoproto/gogo.proto";
+
+// MsgFee was removed, but leaving this as legacy record
+message MsgFee {
+  option (gogoproto.goproto_getters) = false;
+
+  string msg_type = 1;
+  string fee = 2 [
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false
+  ];
+}
+
+message MsgGasCost {
+  option (gogoproto.goproto_getters) = false;
+  string msg_type = 1;
+  string gas_cost = 2 [
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false
+  ];
+}
+
+message MinGasPrice {
+  option (gogoproto.goproto_getters) = false;
+  string gas_price = 1 [
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
+    (gogoproto.nullable) = false
+  ];
+  string denom = 2;
+}

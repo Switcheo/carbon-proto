@@ -1,0 +1,39 @@
+syntax = "proto3";
+package Switcheo.carbon.market;
+
+// this line is used by starport scaffolding # proto/tx/import
+import "Switcheo/carbon/market/market.proto";
+import "gogoproto/gogo.proto";
+import "google/protobuf/duration.proto";
+import "amino/amino.proto";
+
+option go_package = "github.com/Switcheo/carbon/x/market/types";
+option (gogoproto.goproto_getters_all) = false;
+
+// do not remove this file for legacy: grpc query
+// api.carbon.network/cosmos/gov/v1/proposals needs this!!
+
+message CreateMarketProposal {
+  option (amino.name) = "market/CreateMarketProposal";
+
+  string title = 1;
+  string description = 2;
+  Market msg = 3 [ (gogoproto.nullable) = false ];
+}
+
+message UpdateMarketProposal {
+  option (amino.name) = "market/UpdateMarketProposal";
+
+  string title = 1;
+  string description = 2;
+  MarketParams msg = 3 [ (gogoproto.nullable) = false ];
+}
+
+message UpdatePerpetualsFundingIntervalProposal {
+  option (amino.name) = "market/UpdatePerpsFundingIntervalProp";
+
+  string title = 1;
+  string description = 2;
+  google.protobuf.Duration perpetuals_funding_interval = 3
+      [ (gogoproto.stdduration) = true, (gogoproto.nullable) = false ];
+}

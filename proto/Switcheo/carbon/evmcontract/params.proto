@@ -1,0 +1,17 @@
+syntax = "proto3";
+package Switcheo.carbon.evmcontract;
+
+// this line is used by starport scaffolding # proto/tx/import
+
+option go_package = "github.com/Switcheo/carbon/x/evmcontract/types";
+option (gogoproto.goproto_getters_all) = false;
+
+import "google/protobuf/wrappers.proto";
+import "gogoproto/gogo.proto";
+
+message Params { uint64 response_gas_cap = 1; }
+
+message ParamsToUpdate {
+  google.protobuf.UInt64Value response_gas_cap = 1
+      [ (gogoproto.wktpointer) = true ];
+}

@@ -1,0 +1,37 @@
+syntax = "proto3";
+package Switcheo.carbon.broker;
+
+option go_package = "github.com/Switcheo/carbon/x/broker/types";
+option (gogoproto.goproto_getters_all) = false;
+
+import "google/protobuf/timestamp.proto";
+import "gogoproto/gogo.proto";
+
+// SpotAmm exists when there is a quote on the orderbook
+message SpotAmm {
+  uint64 pool_id = 1;
+  string market_id = 2;
+  bytes reserves_hash = 3;
+  reserved 4; // used to be orders, but deprecated
+  bytes pool_route = 5;
+}
+
+// PerpsAmm exists when there is at least 1 PerpsMarketAmm
+message PerpsAmm {
+  uint64 pool_id = 1;
+  bytes quoting_hash = 2;
+  reserved 3; // used to be legacy_last_quoted_at, but deprecated
+  repeated PerpsMarketAmm markets = 4 [ (gogoproto.nullable) = false ];
+  google.protobuf.Timestamp last_quoted_at = 5
+      [ (gogoproto.stdtime) = true, (gogoproto.nullable) = false ];
+}
+
+// PerpsMarketAmm exists when it is active/close-only
+message PerpsMarketAmm {
+  string market_id = 1;
+  reserved 2; // used to be orders, but deprecated
+  string last_index_price = 3 [
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
+    (gogoproto.nullable) = false
+  ];
+}

@@ -1,0 +1,15 @@
+syntax = "proto3";
+package Switcheo.carbon.btcx;
+
+import "gogoproto/gogo.proto";
+import "Switcheo/carbon/btcx/denom_info.proto";
+
+option go_package = "github.com/Switcheo/carbon/x/btcx/types";
+
+message DenomCrossChainInfo {
+  option (gogoproto.goproto_getters) = false;
+
+  DenomInfo denom_info = 1 [ (gogoproto.nullable) = false ];
+  uint64 to_chain_id = 2;
+  string to_asset_hash = 3;
+}

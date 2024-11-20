@@ -1,0 +1,40 @@
+syntax = "proto3";
+package Switcheo.carbon.insurance;
+
+option go_package = "github.com/Switcheo/carbon/x/insurance/types";
+option (gogoproto.goproto_getters_all) = false;
+
+import "cosmos/base/v1beta1/coin.proto";
+import "google/protobuf/wrappers.proto";
+import "gogoproto/gogo.proto";
+import "google/protobuf/duration.proto";
+import "google/protobuf/timestamp.proto";
+
+message FundByMarket {
+  string amount = 1 [
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false
+  ];
+  bytes key = 2;
+}
+
+message Fund {
+  string amount = 1 [
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false
+  ];
+}
+
+// fund utilization is the amount of insurance fund used by a market within a
+// given interval
+message FundUtilization {
+  string market_id = 1;
+  // start time of the current interval
+  google.protobuf.Timestamp interval_start_time = 2
+      [ (gogoproto.stdtime) = true, (gogoproto.nullable) = false ];
+  // amount of insurance fund used within the interval
+  cosmos.base.v1beta1.Coin current_utilization = 3 [
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Coin",
+    (gogoproto.nullable) = false
+  ];
+}

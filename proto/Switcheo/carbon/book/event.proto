@@ -1,0 +1,27 @@
+syntax = "proto3";
+package Switcheo.carbon.book;
+
+option go_package = "github.com/Switcheo/carbon/x/book/types";
+
+import "gogoproto/gogo.proto";
+option (gogoproto.goproto_getters_all) = false;
+
+message OrderBookEvent {
+  reserved 1; // used to be type, but deprecated
+  string market_id = 2;
+  string side = 3;
+  string price = 4 [
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
+    (gogoproto.nullable) = false
+  ];
+  string quantity = 5 [
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false
+  ];
+}
+
+message VirtualOrderBookEvent {
+  OrderBookEvent book = 1 [ (gogoproto.nullable) = false ];
+}
+
+message ClearVirtualOrderBookEvent { string market_id = 1; }

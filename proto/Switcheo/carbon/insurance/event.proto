@@ -1,0 +1,15 @@
+syntax = "proto3";
+package Switcheo.carbon.insurance;
+
+option go_package = "github.com/Switcheo/carbon/x/insurance/types";
+option (gogoproto.goproto_getters_all) = false;
+
+import "gogoproto/gogo.proto";
+
+message EventDataInsuranceFundTransfer {
+  // TODO: CLEAN UP IN SEPARATE PR
+  // BlockHeight    int64     `json:"block_height"`
+  // BlockCreatedAt time.Time `json:"block_created_at"`
+  // Amount sdkmath.Int   `json:"amount"`
+  // Denom  string    `json:"denom"`
+}

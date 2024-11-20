@@ -1,0 +1,178 @@
+syntax = "proto3";
+package Switcheo.carbon.oracle;
+import "google/protobuf/wrappers.proto";
+import "gogoproto/gogo.proto";
+import "Switcheo/carbon/oracle/oracle.proto";
+import "Switcheo/carbon/oracle/params.proto";
+import "cosmos/msg/v1/msg.proto";
+import "cosmos_proto/cosmos.proto";
+import "amino/amino.proto";
+// this line is used by starport scaffolding # proto/tx/import
+
+option go_package = "github.com/Switcheo/carbon/x/oracle/types";
+option (gogoproto.goproto_getters_all) = false;
+
+// Msg defines the Msg service.
+service Msg {
+  option (cosmos.msg.v1.service) = true;
+  // this line is used by starport scaffolding # proto/tx/rpc
+  rpc CreateOracle(MsgCreateOracle) returns (MsgCreateOracleResponse);
+  rpc UpdateOracle(MsgUpdateOracle) returns (MsgUpdateOracleResponse);
+  rpc RemoveOracle(MsgRemoveOracle) returns (MsgRemoveOracleResponse);
+  rpc SetOracleSlashEnabled(MsgSetOracleSlashEnabled)
+      returns (MsgSetOracleSlashEnabledResponse);
+  rpc UpdateOracleContract(MsgUpdateOracleContract)
+      returns (MsgUpdateOracleContractResponse);
+  rpc DeployOracleContract(MsgDeployOracleContract)
+      returns (MsgDeployOracleContractResponse);
+  // UpdateParams defines a governance operation for updating the module
+  // parameters. The authority is hard-coded to the x/gov module account.
+  //
+  // Since: cosmos-sdk 0.47
+  rpc UpdateParams(MsgUpdateParams) returns (MsgUpdateParamsResponse);
+  rpc CreateResult(MsgCreateResult) returns (MsgCreateResultResponse);
+}
+
+// this line is used by starport scaffolding # proto/tx/message
+message MsgCreateOracle {
+  option (cosmos.msg.v1.signer) = "creator";
+  option (amino.name) = "oracle/CreateOracle";
+
+  string creator = 1 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+  CreateOracleParams create_oracle_params = 2 [ (gogoproto.nullable) = false ];
+}
+
+message CreateOracleParams {
+  string creator = 1 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+  string id = 2;
+  string description = 3;
+  int64 min_turnout_percentage = 4;
+  int64 max_result_age = 5;
+  string security_type = 6;
+  string result_strategy = 7;
+  int64 resolution = 8;
+  string spec = 9;
+}
+
+message MsgCreateOracleResponse { string id = 1; }
+
+message MsgUpdateOracle {
+  option (cosmos.msg.v1.signer) = "updater";
+  option (amino.name) = "oracle/UpdateOracle";
+
+  string updater = 1 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+  UpdateOracleParams update_oracle_params = 2 [ (gogoproto.nullable) = false ];
+}
+
+message UpdateOracleParams {
+  string id = 1;
+  google.protobuf.StringValue description = 2 [ (gogoproto.wktpointer) = true ];
+  google.protobuf.StringValue status = 3 [ (gogoproto.wktpointer) = true ];
+  google.protobuf.Int64Value minTurnoutPercentage = 4
+      [ (gogoproto.wktpointer) = true ];
+  google.protobuf.Int64Value maxResultAge = 5 [ (gogoproto.wktpointer) = true ];
+  google.protobuf.StringValue securityType = 6
+      [ (gogoproto.wktpointer) = true ];
+  google.protobuf.StringValue resultStrategy = 7
+      [ (gogoproto.wktpointer) = true ];
+  google.protobuf.Int64Value resolution = 8 [ (gogoproto.wktpointer) = true ];
+  google.protobuf.StringValue spec = 9 [ (gogoproto.wktpointer) = true ];
+}
+
+message MsgUpdateOracleResponse {}
+
+message MsgRemoveOracle {
+  option (cosmos.msg.v1.signer) = "creator";
+  option (amino.name) = "oracle/RemoveOracle";
+
+  string creator = 1 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+  string oracle_id = 2;
+}
+
+message MsgRemoveOracleResponse {}
+
+message MsgSetOracleSlashEnabled {
+  option (cosmos.msg.v1.signer) = "creator";
+  option (amino.name) = "oracle/SetOracleSlashEnabled";
+
+  string creator = 1 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+  bool enabled = 2;
+}
+
+message MsgSetOracleSlashEnabledResponse {}
+
+// MsgUpdateParams is the Msg/UpdateParams request type.
+//
+// Since: cosmos-sdk 0.47
+message MsgUpdateParams {
+  option (cosmos.msg.v1.signer) = "authority";
+  option (amino.name) = "oracle/MsgUpdateParams";
+
+  // authority is the address of the governance account.
+  string authority = 1 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+
+  // params defines the optional parameters to update.
+  ParamsToUpdate params = 2 [ (gogoproto.nullable) = false ];
+}
+
+// MsgUpdateParamsResponse defines the response structure for executing a
+// MsgUpdateParams message.
+//
+// Since: cosmos-sdk 0.47
+message MsgUpdateParamsResponse {}
+
+message MsgUpdateOracleContract {
+  option (cosmos.msg.v1.signer) = "creator";
+  option (amino.name) = "oracle/MsgUpdateOracleContract";
+
+  string creator = 1;
+  string oracle_id = 2;
+  string contract_address = 3;
+}
+
+message MsgUpdateOracleContractResponse {}
+
+message MsgDeployOracleContract {
+  option (cosmos.msg.v1.signer) = "creator";
+  option (amino.name) = "oracle/MsgDeployOracleContract";
+
+  string creator = 1;
+  string oracle_id = 2;
+}
+
+message MsgDeployOracleContractResponse {}
+
+message ValidatorSignature {
+  bytes pub_key = 1; // used to be named "validator", changed to "pub_key"
+                     // from 2.46.0 onwards
+  int32 validator_index = 2;
+  bytes signature = 3;
+  int64 signed_timestamp = 4;
+}
+
+message VotesForOracle {
+  int32 oracle_index = 1; // stored as the oracle index position to save space,
+                          // convert back to string during processing
+  repeated VotesForData votes_for_data = 2;
+}
+
+message VotesForData {
+  string data = 1;
+  repeated VotesForTimestamp votes_for_timestamps = 2;
+}
+
+message VotesForTimestamp {
+  int64 timestamp = 1;
+  repeated int32 validator_indexes = 2;
+}
+
+message MsgCreateResult {
+  option (cosmos.msg.v1.signer) = "proposer";
+  // proposer is the address of the block proposer
+  string proposer = 1 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+
+  repeated ValidatorSignature validator_signatures = 2;
+  repeated VotesForOracle votes_for_oracles = 3;
+}
+
+message MsgCreateResultResponse {}

@@ -1,0 +1,66 @@
+syntax = "proto3";
+package Switcheo.carbon.evmmerge;
+
+import "gogoproto/gogo.proto";
+import "google/api/annotations.proto";
+import "cosmos/base/query/v1beta1/pagination.proto";
+import "Switcheo/carbon/evmmerge/address.proto";
+
+// this line is used by starport scaffolding # 1
+
+option go_package = "github.com/Switcheo/carbon/x/evmmerge/types";
+
+// Query defines the gRPC querier service.
+service Query {
+
+  // MappedAddress queries current address mappings for merged accounts.
+  rpc MappedAddress(QueryMappedAddressRequest)
+      returns (QueryMappedAddressResponse) {
+    option (google.api.http).get =
+        "/carbon/evmmerge/v1/mapped_address/{address}";
+  }
+
+  // MappedAddressAll queries all address mappings.
+  rpc MappedAddressAll(QueryAllMappedAddressRequest)
+      returns (QueryAllMappedAddressResponse) {
+    option (google.api.http).get = "/carbon/evmmerge/v1/mapped_address";
+  }
+
+  // MappedEvmAddress queries mapped evm address mappings for a given cosmos
+  // address.
+  rpc MappedEvmAddress(QueryMappedAddressRequest)
+      returns (QueryMappedAddressResponse) {
+    option (google.api.http).get =
+        "/carbon/evmmerge/v1/mapped_evm_address/{address}";
+  }
+
+  // MappedCosmosAddress queries mapped cosmos address mappings for a given eth
+  // address.
+  rpc MappedCosmosAddress(QueryMappedAddressRequest)
+      returns (QueryMappedAddressResponse) {
+    option (google.api.http).get =
+        "/carbon/evmmerge/v1/mapped_cosmos_address/{address}";
+  }
+
+  // this line is used by starport scaffolding # 2
+}
+
+// QueryMappedAddressRequest is the request type for the Query/MappedAddress RPC
+// method.
+message QueryMappedAddressRequest { string address = 1; }
+
+// QueryMappedAddressResponse is the response type for the Query/MappedAddress
+// RPC method.
+message QueryMappedAddressResponse { string mapped_address = 1; }
+
+message QueryAllMappedAddressRequest {
+  cosmos.base.query.v1beta1.PageRequest pagination = 1;
+}
+
+message QueryAllMappedAddressResponse {
+  repeated EthCosmosAddressWrapper merged_account_addresses = 1
+      [ (gogoproto.nullable) = false ];
+  cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+
+// this line is used by starport scaffolding # 3

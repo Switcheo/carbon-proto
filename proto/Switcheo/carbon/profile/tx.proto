@@ -1,0 +1,29 @@
+syntax = "proto3";
+package Switcheo.carbon.profile;
+
+import "gogoproto/gogo.proto";
+import "cosmos/msg/v1/msg.proto";
+import "amino/amino.proto";
+// this line is used by starport scaffolding # proto/tx/import
+
+option go_package = "github.com/Switcheo/carbon/x/profile/types";
+option (gogoproto.goproto_getters_all) = false;
+
+// Msg defines the Msg service.
+service Msg {
+  option (cosmos.msg.v1.service) = true;
+  // this line is used by starport scaffolding # proto/tx/rpc
+  rpc UpdateProfile(MsgUpdateProfile) returns (MsgUpdateProfileResponse);
+}
+
+// this line is used by starport scaffolding # proto/tx/message
+message MsgUpdateProfile {
+  option (cosmos.msg.v1.signer) = "creator";
+  option (amino.name) = "profile/UpdateProfile";
+
+  string creator = 1;
+  string username = 2;
+  string twitter = 3;
+}
+
+message MsgUpdateProfileResponse {}

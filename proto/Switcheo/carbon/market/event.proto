@@ -1,0 +1,14 @@
+syntax = "proto3";
+package Switcheo.carbon.market;
+
+option go_package = "github.com/Switcheo/carbon/x/market/types";
+option (gogoproto.goproto_getters_all) = false;
+
+import "Switcheo/carbon/market/market.proto";
+import "Switcheo/carbon/market/fee.proto";
+import "gogoproto/gogo.proto";
+
+message MarketEvent {
+  Market market = 1 [ (gogoproto.nullable) = false ];
+  string type = 2;
+}

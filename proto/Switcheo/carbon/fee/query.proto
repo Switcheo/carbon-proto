@@ -1,0 +1,70 @@
+syntax = "proto3";
+package Switcheo.carbon.fee;
+
+import "google/api/annotations.proto";
+import "cosmos/base/query/v1beta1/pagination.proto";
+import "gogoproto/gogo.proto";
+// this line is used by starport scaffolding # 1
+import "Switcheo/carbon/fee/fee.proto";
+
+option go_package = "github.com/Switcheo/carbon/x/fee/types";
+option (gogoproto.goproto_getters_all) = false;
+
+// Query defines the gRPC querier service.
+service Query {
+  // this line is used by starport scaffolding # 2
+
+  // Get network fee for msg type
+  rpc MsgGasCost(QueryGetMsgGasCostRequest)
+      returns (QueryGetMsgGasCostResponse) {
+    option (google.api.http).get = "/carbon/fee/v1/gas_costs/{msg_type}";
+  }
+
+  // Get network fee for all msg types
+  rpc MsgGasCostAll(QueryAllMsgGasCostRequest)
+      returns (QueryAllMsgGasCostResponse) {
+    option (google.api.http).get = "/carbon/fee/v1/gas_costs";
+  }
+
+  rpc MinGasPrice(QueryGetMinGasPriceRequest)
+      returns (QueryGetMinGasPriceResponse) {
+    option (google.api.http).get = "/carbon/fee/v1/gas_prices/{denom}";
+  }
+
+  // Get network fee for all msg types
+  rpc MinGasPriceAll(QueryAllMinGasPriceRequest)
+      returns (QueryAllMinGasPriceResponse) {
+    option (google.api.http).get = "/carbon/fee/v1/gas_prices";
+  }
+}
+
+// this line is used by starport scaffolding # 3
+message QueryGetMsgGasCostRequest { string msg_type = 1; }
+
+message QueryGetMsgGasCostResponse {
+  MsgGasCost msg_gas_cost = 1 [ (gogoproto.nullable) = false ];
+}
+
+message QueryAllMsgGasCostRequest {
+  cosmos.base.query.v1beta1.PageRequest pagination = 1;
+}
+
+message QueryAllMsgGasCostResponse {
+  repeated MsgGasCost msg_gas_costs = 1 [ (gogoproto.nullable) = false ];
+  cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+
+message QueryGetMinGasPriceRequest { string denom = 1; }
+
+message QueryGetMinGasPriceResponse {
+  MinGasPrice min_gas_price = 1 [ (gogoproto.nullable) = false ];
+}
+
+message QueryAllMinGasPriceRequest {
+  cosmos.base.query.v1beta1.PageRequest pagination = 1;
+}
+
+message QueryAllMinGasPriceResponse {
+  repeated MinGasPrice min_gas_prices = 1 [ (gogoproto.nullable) = false ];
+  cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}

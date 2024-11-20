@@ -1,0 +1,30 @@
+syntax = "proto3";
+package Switcheo.carbon.market;
+
+// this line is used by starport scaffolding # genesis/proto/import
+import "Switcheo/carbon/market/market.proto";
+import "Switcheo/carbon/market/fee.proto";
+import "Switcheo/carbon/market/params.proto";
+import "gogoproto/gogo.proto";
+
+option go_package = "github.com/Switcheo/carbon/x/market/types";
+option (gogoproto.goproto_getters_all) = false;
+
+// GenesisState defines the market module's genesis state.
+message GenesisState {
+  // this line is used by starport scaffolding # genesis/proto/state
+  // this line is used by starport scaffolding # ibc/genesis/proto
+  repeated Market markets = 1 [ (gogoproto.nullable) = false ];
+
+  // params defines all the paramaters of the module.
+  Params params = 2 [ (gogoproto.nullable) = false ];
+
+  ControlledParams controlled_params = 3 [ (gogoproto.nullable) = false ];
+
+  int64 market_id_sequence = 4;
+
+  repeated StakeEquivalence stake_equivalences = 5
+      [ (gogoproto.nullable) = false ];
+
+  repeated FeeStructure fee_structures = 6 [ (gogoproto.nullable) = false ];
+}

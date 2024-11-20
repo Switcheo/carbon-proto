@@ -1,0 +1,41 @@
+syntax = "proto3";
+package Switcheo.carbon.sequence;
+
+import "google/api/annotations.proto";
+import "gogoproto/gogo.proto";
+import "Switcheo/carbon/sequence/genesis.proto";
+import "cosmos/base/query/v1beta1/pagination.proto";
+
+// this line is used by starport scaffolding # 1
+
+option go_package = "github.com/Switcheo/carbon/x/sequence/types";
+option (gogoproto.goproto_getters_all) = false;
+
+// Query defines the gRPC querier service.
+service Query {
+  // this line is used by starport scaffolding # 2
+
+  // get sequence number by module
+  rpc Sequence(QuerySequenceRequest) returns (QuerySequenceResponse) {
+    option (google.api.http).get = "/carbon/sequence/v1/sequence/{module}";
+  }
+
+  rpc SequenceAll(QuerySequenceAllRequest) returns (QuerySequenceAllResponse) {
+    option (google.api.http).get = "/carbon/sequence/v1/sequence";
+  }
+}
+
+message QuerySequenceRequest { string module = 1; }
+
+message QuerySequenceResponse {
+  repeated Sequence sequences = 1 [ (gogoproto.nullable) = false ];
+}
+
+message QuerySequenceAllRequest {
+  cosmos.base.query.v1beta1.PageRequest pagination = 1;
+}
+
+message QuerySequenceAllResponse {
+  repeated Sequence sequences = 1 [ (gogoproto.nullable) = false ];
+  cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}

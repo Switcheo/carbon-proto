@@ -1,0 +1,18 @@
+syntax = "proto3";
+package Switcheo.carbon.evmmerge;
+
+import "gogoproto/gogo.proto";
+// this line is used by starport scaffolding # genesis/proto/import
+
+option go_package = "github.com/Switcheo/carbon/x/evmmerge/types";
+
+// GenesisState defines the evmmerge module's genesis state.
+message GenesisState {
+  // eth-cosmos mapping from account keeper
+  map<string, string> eth_to_cosmos_address_map = 1
+      [ (gogoproto.nullable) = false ];
+  // cosmos-eth mapping from account keeper
+  map<string, string> cosmos_to_eth_address_map = 2
+      [ (gogoproto.nullable) = false ];
+  // this line is used by starport scaffolding # genesis/proto/state
+}

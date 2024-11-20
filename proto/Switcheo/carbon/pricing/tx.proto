@@ -1,0 +1,134 @@
+syntax = "proto3";
+package Switcheo.carbon.pricing;
+
+import "gogoproto/gogo.proto";
+import "google/protobuf/duration.proto";
+import "Switcheo/carbon/pricing/pricing.proto";
+import "Switcheo/carbon/pricing/params.proto";
+import "cosmos/msg/v1/msg.proto";
+import "cosmos_proto/cosmos.proto";
+import "amino/amino.proto";
+// this line is used by starport scaffolding # proto/tx/import
+
+option go_package = "github.com/Switcheo/carbon/x/pricing/types";
+option (gogoproto.goproto_getters_all) = false;
+
+// Msg defines the Msg service.
+service Msg {
+  option (cosmos.msg.v1.service) = true;
+  // this line is used by starport scaffolding # proto/tx/rpc
+  rpc SetBackfillTimeInterval(MsgSetBackfillTimeInterval)
+      returns (MsgSetBackfillTimeIntervalResponse);
+  rpc SetSmoothenBand(MsgSetSmoothenBand) returns (MsgSetSmoothenBandResponse);
+  rpc SetImpactBand(MsgSetImpactBand) returns (MsgSetImpactBandResponse);
+  rpc SetStaleIndexAllowance(MsgSetStaleIndexAllowance)
+      returns (MsgSetStaleIndexAllowanceResponse);
+  rpc UpdateTokenPriceOracle(MsgUpdateTokenPriceOracle)
+      returns (MsgUpdateTokenPriceOracleResponse);
+  rpc UpdateSettlementPrice(MsgUpdateSettlementPrice)
+      returns (MsgUpdateSettlementPriceResponse);
+  rpc RemoveTokenPrice(MsgRemoveTokenPrice)
+      returns (MsgRemoveTokenPriceResponse);
+  // UpdateParams defines a governance operation for updating the module
+  // parameters. The authority is hard-coded to the x/gov module account.
+  // Since: cosmos-sdk 0.47
+  rpc UpdateParams(MsgUpdateParams) returns (MsgUpdateParamsResponse);
+}
+message MsgSetBackfillTimeInterval {
+  option (cosmos.msg.v1.signer) = "creator";
+  option (amino.name) = "pricing/SetBackfillTimeInterval";
+
+  string creator = 1 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+  google.protobuf.Duration backfill_time_interval = 2
+      [ (gogoproto.nullable) = false, (gogoproto.stdduration) = true ];
+}
+
+message MsgSetBackfillTimeIntervalResponse {}
+
+message MsgSetSmoothenBand {
+  option (cosmos.msg.v1.signer) = "creator";
+  option (amino.name) = "pricing/SetSmoothenBand";
+
+  string creator = 1 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+  uint32 smoothen_band = 2;
+}
+
+message MsgSetSmoothenBandResponse {}
+
+message MsgSetImpactBand {
+  option (cosmos.msg.v1.signer) = "creator";
+  option (amino.name) = "pricing/SetImpactBand";
+
+  string creator = 1 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+  uint32 impact_band = 2;
+}
+
+message MsgSetImpactBandResponse {}
+
+message MsgSetStaleIndexAllowance {
+  option (cosmos.msg.v1.signer) = "creator";
+  option (amino.name) = "pricing/SetStaleIndexAllowance";
+
+  string creator = 1 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+  google.protobuf.Duration stale_index_allowance = 2
+      [ (gogoproto.nullable) = false, (gogoproto.stdduration) = true ];
+}
+
+message MsgSetStaleIndexAllowanceResponse {}
+
+message MsgUpdateTokenPriceOracle {
+  option (cosmos.msg.v1.signer) = "creator";
+  option (amino.name) = "pricing/UpdateTokenPriceOracle";
+
+  string creator = 1 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+  string denom = 2;
+  string oracle_id = 3;
+}
+
+message MsgUpdateTokenPriceOracleResponse {}
+
+// MsgUpdateParams is the Msg/UpdateParams request type.
+//
+// Since: cosmos-sdk 0.47
+message MsgUpdateParams {
+  option (cosmos.msg.v1.signer) = "authority";
+  option (amino.name) = "pricing/MsgUpdateParams";
+
+  // authority is the address of the governance account.
+  string authority = 1 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+
+  // params defines the optional parameters to update.
+  ParamsToUpdate params = 2 [ (gogoproto.nullable) = false ];
+}
+
+// MsgUpdateParamsResponse defines the response structure for executing a
+// MsgUpdateParams message.
+//
+// Since: cosmos-sdk 0.47
+message MsgUpdateParamsResponse {}
+
+// this line is used by starport scaffolding # proto/tx/message
+message MsgUpdateSettlementPrice {
+  option (cosmos.msg.v1.signer) = "authority";
+  option (amino.name) = "pricing/MsgUpdateSettlementPrice";
+
+  string authority = 1 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+  string market_id = 2;
+  string settlement_price = 3 [
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
+    (gogoproto.nullable) = false
+  ];
+}
+
+message MsgUpdateSettlementPriceResponse {}
+
+message MsgRemoveTokenPrice {
+  option (cosmos.msg.v1.signer) = "authority";
+  option (amino.name) = "pricing/MsgRemoveTokenPrice";
+
+  // authority is the address of the governance account.
+  string authority = 1 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+  string denom = 2;
+}
+
+message MsgRemoveTokenPriceResponse { string denom = 1; }

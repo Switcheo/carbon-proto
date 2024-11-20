@@ -1,0 +1,171 @@
+syntax = "proto3";
+package Switcheo.carbon.coin;
+
+import "google/api/annotations.proto";
+import "cosmos/base/query/v1beta1/pagination.proto";
+import "gogoproto/gogo.proto";
+import "cosmos_proto/cosmos.proto";
+// this line is used by starport scaffolding # 1
+import "Switcheo/carbon/coin/bridge.proto";
+import "Switcheo/carbon/coin/token.proto";
+import "Switcheo/carbon/coin/group.proto";
+
+option go_package = "github.com/Switcheo/carbon/x/coin/types";
+option (gogoproto.goproto_getters_all) = false;
+
+// Query defines the gRPC querier service.
+service Query {
+  // this line is used by starport scaffolding # 2
+
+  // Get token details for a denom
+  rpc Token(QueryGetTokenRequest) returns (QueryGetTokenResponse) {
+    option (google.api.http).get = "/carbon/coin/v1/tokens/{denom}";
+  }
+
+  // Get all token details
+  rpc TokenAll(QueryAllTokenRequest) returns (QueryAllTokenResponse) {
+    option (google.api.http).get = "/carbon/coin/v1/tokens";
+  }
+
+  // Get locked coins for an address
+  rpc LockedCoins(QueryGetLockedCoinsRequest)
+      returns (QueryGetLockedCoinsResponse) {
+    option (google.api.http).get = "/carbon/coin/v1/locked/{address}";
+  }
+
+  // Get wrapper mappings for wrapped tokens
+  rpc WrapperMappings(QueryAllWrapperMappingsRequest)
+      returns (QueryAllWrapperMappingsResponse) {
+    option (google.api.http).get = "/carbon/coin/v1/wrapper_mappings";
+  }
+
+  // Get balances for an address
+  rpc Balances(QueryGetBalancesRequest) returns (QueryGetBalancesResponse) {
+    option (google.api.http).get = "/carbon/coin/v1/balances/{address}";
+  }
+
+  // Get all balances of all addresses
+  rpc BalancesTotal(QueryTotalBalancesRequest)
+      returns (QueryTotalBalancesResponse) {
+    option (google.api.http).get =
+        "/carbon/coin/v1/total_balances/{end_block_height}";
+  }
+
+  // Get details for a cross-chain bridge
+  rpc Bridge(QueryGetBridgeRequest) returns (QueryGetBridgeResponse) {
+    option (google.api.http).get =
+        "/carbon/coin/v1/bridges/{bridge_id}/{chain_id}";
+  }
+
+  // Get details for all cross-chain bridges
+  rpc BridgeAll(QueryAllBridgeRequest) returns (QueryAllBridgeResponse) {
+    option (google.api.http).get = "/carbon/coin/v1/bridges";
+  }
+
+  // Get TokenGroup details for a particular id
+  rpc TokenGroup(QueryGetTokenGroupRequest)
+      returns (QueryGetTokenGroupResponse) {
+    option (google.api.http).get = "/carbon/coin/v1/token_groups/{group_id}";
+  }
+
+  // Get all TokenGroup details
+  rpc TokenGroupAll(QueryAllTokenGroupsRequest)
+      returns (QueryAllTokenGroupsResponse) {
+    option (google.api.http).get = "/carbon/coin/v1/token_groups";
+  }
+
+  // Get denom => group_id mappings
+  rpc TokenGroupMappings(QueryTokenGroupMappingsRequest)
+      returns (QueryTokenGroupMappingsResponse) {
+    option (google.api.http).get = "/carbon/coin/v1/token_group_mappings";
+  }
+}
+
+// this line is used by starport scaffolding # 3
+message QueryGetTokenRequest { string denom = 1; }
+
+message QueryGetTokenResponse {
+  Token token = 1 [ (gogoproto.nullable) = false ];
+}
+
+message QueryAllTokenRequest {
+  cosmos.base.query.v1beta1.PageRequest pagination = 1;
+}
+
+message QueryAllTokenResponse {
+  repeated Token tokens = 1 [ (gogoproto.nullable) = false ];
+  cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+
+message QueryGetLockedCoinsRequest {
+  string address = 1 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+  cosmos.base.query.v1beta1.PageRequest pagination = 2;
+}
+
+message QueryGetLockedCoinsResponse {
+  repeated LockedCoins locked_coins = 1 [ (gogoproto.nullable) = false ];
+  cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+
+message QueryAllWrapperMappingsRequest {
+  cosmos.base.query.v1beta1.PageRequest pagination = 1;
+}
+
+message QueryAllWrapperMappingsResponse {
+  map<string, string> wrapper_mappings = 1;
+  cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+
+message QueryGetBalancesRequest { string address = 1; }
+
+message QueryGetBalancesResponse {
+  repeated TokenBalance token_balances = 1 [ (gogoproto.nullable) = false ];
+}
+
+message QueryTotalBalancesRequest { string end_block_height = 1; }
+
+message QueryTotalBalancesResponse {
+  repeated coin.TokenBalance balances = 1 [ (gogoproto.nullable) = false ];
+}
+
+message QueryGetBridgeRequest {
+  uint64 bridge_id = 1;
+  uint64 chain_id = 2;
+}
+
+message QueryGetBridgeResponse {
+  Bridge bridge = 1 [ (gogoproto.nullable) = false ];
+}
+
+message QueryAllBridgeRequest {
+  cosmos.base.query.v1beta1.PageRequest pagination = 1;
+}
+
+message QueryAllBridgeResponse {
+  repeated Bridge bridges = 1 [ (gogoproto.nullable) = false ];
+  cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+
+message QueryGetTokenGroupRequest { string group_id = 1; }
+
+message QueryGetTokenGroupResponse {
+  TokenGroupDetails token_group = 1 [ (gogoproto.nullable) = false ];
+}
+
+message QueryAllTokenGroupsRequest {
+  cosmos.base.query.v1beta1.PageRequest pagination = 1;
+}
+
+message QueryAllTokenGroupsResponse {
+  repeated TokenGroupDetails token_groups = 1 [ (gogoproto.nullable) = false ];
+  cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+
+message QueryTokenGroupMappingsRequest {
+  cosmos.base.query.v1beta1.PageRequest pagination = 1;
+}
+
+message QueryTokenGroupMappingsResponse {
+  map<string, uint64> token_group_mappings = 1 [ (gogoproto.nullable) = false ];
+  cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}

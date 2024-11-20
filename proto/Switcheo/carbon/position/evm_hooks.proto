@@ -1,0 +1,21 @@
+syntax = "proto3";
+package Switcheo.carbon.position;
+
+option go_package = "github.com/Switcheo/carbon/x/position/types";
+option (gogoproto.goproto_getters_all) = false;
+
+import "gogoproto/gogo.proto";
+import "cosmos_proto/cosmos.proto";
+
+message QueryEVMPositionRequest {
+  bytes evm_address = 1;
+  string carbon_address = 2 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+  string market_id = 3;
+  bytes caller = 4;
+}
+
+message QueryEVMPositionQueue {
+  bytes contract_address = 1;
+  repeated QueryEVMPositionRequest requests = 2
+      [ (gogoproto.nullable) = false ];
+}

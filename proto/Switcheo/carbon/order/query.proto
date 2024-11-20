@@ -1,0 +1,93 @@
+syntax = "proto3";
+package Switcheo.carbon.order;
+
+import "google/api/annotations.proto";
+import "cosmos/base/query/v1beta1/pagination.proto";
+import "cosmos_proto/cosmos.proto";
+import "gogoproto/gogo.proto";
+
+import "Switcheo/carbon/order/order.proto";
+import "Switcheo/carbon/order/evm_hooks.proto";
+import "Switcheo/carbon/order/params.proto";
+
+// this line is used by starport scaffolding # 1
+
+option go_package = "github.com/Switcheo/carbon/x/order/types";
+option (gogoproto.goproto_getters_all) = false;
+
+// Query defines the gRPC querier service.
+service Query {
+  // this line is used by starport scaffolding # 2
+
+  // Get details for an order
+  rpc Order(QueryGetOrderRequest) returns (QueryGetOrderResponse) {
+    option (google.api.http).get = "/carbon/order/v1/orders/{id}";
+  }
+
+  // Get details for all orders
+  rpc OrderAll(QueryAllOrderRequest) returns (QueryAllOrderResponse) {
+    option (google.api.http).get = "/carbon/order/v1/orders";
+  }
+
+  // Get open orders for an address and market
+  rpc OrdersAccountOpen(QueryAccountOpenOrdersRequest)
+      returns (QueryAccountOpenOrdersResponse) {
+    option (google.api.http).get =
+        "/carbon/order/v1/orders/account_open/{address}/{market_id}";
+  }
+
+  rpc Params(QueryParamsRequest) returns (QueryParamsResponse) {
+    option (google.api.http).get = "/carbon/order/v1/params";
+  }
+
+  // Get all orders with allocated margin (open orders)
+  rpc OrderAllocatedMargin(QueryOrderAllocatedMarginRequest)
+      returns (QueryOrderAllocatedMarginResponse) {
+    option (google.api.http).get =
+        "/carbon/order/v1/order_allocated_margin/{end_block_height}";
+  }
+}
+
+// this line is used by starport scaffolding # 3
+message QueryGetOrderRequest { string id = 1; }
+
+message QueryGetOrderResponse {
+  Order order = 1 [ (gogoproto.nullable) = false ];
+}
+
+message QueryAllOrderRequest {
+  string address = 1 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+  string market_id = 2;
+  string order_type = 3;
+  string order_status = 4;
+  cosmos.base.query.v1beta1.PageRequest pagination = 5;
+}
+
+message QueryAllOrderResponse {
+  repeated Order orders = 1 [ (gogoproto.nullable) = false ];
+  cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+
+message QueryAccountOpenOrdersRequest {
+  string address = 1 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+  string market_id = 2;
+}
+
+message QueryAccountOpenOrdersResponse {
+  repeated Order orders = 1 [ (gogoproto.nullable) = false ];
+}
+
+// QueryParamsRequest is request type for the Query/Params RPC method.
+message QueryParamsRequest {}
+
+// QueryParamsResponse is response type for the Query/Params RPC method.
+message QueryParamsResponse {
+  // params holds all the parameters of this module.
+  Params params = 1 [ (gogoproto.nullable) = false ];
+}
+
+message QueryOrderAllocatedMarginRequest { string end_block_height = 1; }
+
+message QueryOrderAllocatedMarginResponse {
+  repeated DBOrder orders = 1 [ (gogoproto.nullable) = false ];
+}

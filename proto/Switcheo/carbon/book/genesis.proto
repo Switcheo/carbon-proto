@@ -1,0 +1,17 @@
+syntax = "proto3";
+package Switcheo.carbon.book;
+
+// this line is used by starport scaffolding # genesis/proto/import
+import "Switcheo/carbon/book/book.proto";
+import "gogoproto/gogo.proto";
+
+option go_package = "github.com/Switcheo/carbon/x/book/types";
+option (gogoproto.goproto_getters_all) = false;
+
+// GenesisState defines the book module's genesis state.
+message GenesisState {
+  // this line is used by starport scaffolding # genesis/proto/state
+  // this line is used by starport scaffolding # ibc/genesis/proto
+  repeated OrderBook order_books = 1 [ (gogoproto.nullable) = false ];
+  repeated StopBook stop_books = 2 [ (gogoproto.nullable) = false ];
+}

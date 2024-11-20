@@ -1,0 +1,170 @@
+syntax = "proto3";
+package Switcheo.carbon.bridge;
+
+import "gogoproto/gogo.proto";
+import "cosmos/base/v1beta1/coin.proto";
+import "Switcheo/carbon/bridge/bridge.proto";
+
+option go_package = "github.com/Switcheo/carbon/x/bridge/types";
+option (gogoproto.goproto_getters_all) = false;
+
+message NewConnectionEvent {
+  Connection connection = 1 [ (gogoproto.nullable) = false ];
+}
+
+message UpdateConnectionEvent {
+  string connection_id = 1;
+  string chain_display_name = 2;
+  bool is_enabled = 3;
+}
+
+message RemoveConnectionEvent { string connection_id = 1; }
+
+message NewExternalTokenMappingEvent {
+  ExternalTokenMapping external_token_mapping = 1
+      [ (gogoproto.nullable) = false ];
+}
+
+message RegisterExternalTokenEvent {
+  ExternalTokenMapping external_token_mapping = 1
+      [ (gogoproto.nullable) = false ];
+  string carbon_token_name = 3;
+}
+
+message RegisterNativeTokenEvent {
+  ExternalTokenMapping external_token_mapping = 1
+      [ (gogoproto.nullable) = false ];
+}
+
+message DeregisterTokenEvent {
+  ExternalTokenMapping external_token_mapping = 1
+      [ (gogoproto.nullable) = false ];
+}
+
+message ExecuteFromCarbonEvent {
+  string connection_id = 1;
+  string sender = 2;
+  string executable_address = 3;
+  bytes execution_data = 4;
+  cosmos.base.v1beta1.Coin token = 5
+      [ (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Coin" ];
+}
+
+message DepositTokenEvent {
+  string connection_id = 1;
+  string sender = 2;
+  string receiver = 3;
+  string asset_address = 4;
+  cosmos.base.v1beta1.Coin token = 5 [
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Coin",
+    (gogoproto.nullable) = false
+  ];
+}
+
+message WithdrawDeductedEvent {
+  string sender = 1;
+  string receiver = 2;
+  ExternalTokenMapping external_token_mapping = 3
+      [ (gogoproto.nullable) = false ];
+  cosmos.base.v1beta1.Coin token = 4 [
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Coin",
+    (gogoproto.nullable) = false
+  ];
+  RelayDetails relay_details = 5 [ (gogoproto.nullable) = false ];
+}
+
+message WithdrawTokenConfirmedEvent {
+  string connection_id = 1;
+  string sender = 2;
+  string receiver = 3;
+  cosmos.base.v1beta1.Coin coin = 4 [
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Coin",
+    (gogoproto.nullable) = false
+  ];
+  string fee_receiver_address = 5;
+  cosmos.base.v1beta1.Coin relay_fee = 6 [
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Coin",
+    (gogoproto.nullable) = false
+  ];
+  uint64 nonce = 7;
+}
+
+message ExecutionOnCarbonErrorEvent {
+  uint64 nonce = 1;
+  string payload_type = 2;
+  string data_encoding = 3;
+  bytes data = 4;
+}
+
+// Event signifying that bridge has sent an outbound message
+message BridgeSentEvent {
+  uint64 bridge_id = 1;
+  string chain_id = 2;
+  string gateway_address = 3;
+  uint64 nonce = 4;
+}
+
+// Event signifying that the sent outbound message was received by the
+// destination and changes are to be commited
+message BridgeAcknowledgedEvent {
+  uint64 bridge_id = 1;
+  string chain_id = 2;
+  string gateway_address = 3;
+  uint64 nonce = 4;
+}
+
+// Event signifying that the sent outbound message failed and changes are to be
+// reverted
+message BridgeRevertedEvent {
+  uint64 bridge_id = 1;
+  string chain_id = 2;
+  string gateway_address = 3;
+  uint64 nonce = 4;
+}
+
+// Event signifying that bridge has received an inbound message
+message BridgeReceivedEvent {
+  uint64 bridge_id = 1;
+  string chain_id = 2;
+  string gateway_address = 3;
+  uint64 nonce = 4;
+}
+
+// Event signifying that a pending action has been registered
+message NewPendingActionEvent {
+  uint64 nonce = 1;
+  uint64 pending_action_type = 2;
+  string connection_id = 3;
+  RelayDetails relay_details = 4 [ (gogoproto.nullable) = false ];
+}
+
+// Event signifying updates to a pending action
+message UpdatePendingActionEvent {
+  uint64 nonce = 1;
+  uint64 pending_action_type = 2;
+  string connection_id = 3;
+  RelayDetails relay_details = 4 [ (gogoproto.nullable) = false ];
+}
+
+// Event signifying expiry of a pending action
+message ExpiredPendingActionEvent {
+  uint64 nonce = 1;
+  uint64 pending_action_type = 2;
+  string connection_id = 3;
+  RelayDetails relay_details = 4 [ (gogoproto.nullable) = false ];
+}
+
+// Event signifying a Axelar CallContract call
+message AxelarCallContractEvent { bytes payload = 1; }
+
+// Event signifying a Axelar CallContract call from Carbon's Bridge Module
+message ModuleAxelarCallContractEvent {
+  uint64 nonce = 1;
+  bytes payload = 2;
+}
+
+// Event signifying a General Message has been received from Axelar
+message AxelarGeneralMessageReceivedEvent {
+  string connection_id = 1;
+  bytes payload = 2;
+}

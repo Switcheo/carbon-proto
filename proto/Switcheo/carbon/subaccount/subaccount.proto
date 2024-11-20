@@ -1,0 +1,32 @@
+syntax = "proto3";
+package Switcheo.carbon.subaccount;
+
+option go_package = "github.com/Switcheo/carbon/x/subaccount/types";
+option (gogoproto.goproto_getters_all) = false;
+
+import "gogoproto/gogo.proto";
+import "google/protobuf/duration.proto";
+import "google/protobuf/timestamp.proto";
+import "cosmos_proto/cosmos.proto";
+
+message SubAccount {
+  string main_address = 1 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+  string role = 2;
+  string expected_authorizer = 3;
+  string sub_address = 4 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+}
+
+message GenesisSubAccount {
+  string main_address = 1 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+  string sub_address = 2 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+  string role = 3;
+}
+
+message MainAccount {
+  repeated string sub_addresses = 1
+      [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+  google.protobuf.Timestamp trading_fee_delegate_last_update = 2
+      [ (gogoproto.stdtime) = true, (gogoproto.nullable) = false ];
+  string main_address = 3 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+  string sub_role = 4;
+}

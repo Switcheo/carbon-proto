@@ -1,0 +1,35 @@
+syntax = "proto3";
+package Switcheo.carbon.broker;
+
+// this line is used by starport scaffolding # proto/tx/import
+import "cosmos/msg/v1/msg.proto";
+import "cosmos_proto/cosmos.proto";
+import "gogoproto/gogo.proto";
+import "amino/amino.proto";
+
+option go_package = "github.com/Switcheo/carbon/x/broker/types";
+option (gogoproto.goproto_getters_all) = false;
+
+// Msg defines the Msg service.
+service Msg {
+  option (cosmos.msg.v1.service) = true;
+  // this line is used by starport scaffolding # proto/tx/rpc
+  rpc InitiateLiquidation(MsgInitiateLiquidation)
+      returns (MsgInitiateLiquidationResponse);
+}
+
+message LiquidatorPosition {
+  string market_id = 1;
+  string address = 2 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+}
+
+// this line is used by starport scaffolding # proto/tx/message
+message MsgInitiateLiquidation {
+  option (cosmos.msg.v1.signer) = "creator";
+  option (amino.name) = "broker/InitiateLiquidation";
+
+  string creator = 1 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+  repeated LiquidatorPosition positions = 2 [ (gogoproto.nullable) = false ];
+}
+
+message MsgInitiateLiquidationResponse {}

@@ -1,0 +1,30 @@
+syntax = "proto3";
+package Switcheo.carbon.evmbank;
+
+import "gogoproto/gogo.proto";
+
+option go_package = "github.com/Switcheo/carbon/x/evmbank/types";
+
+option (gogoproto.equal_all) = true;
+option (gogoproto.verbose_equal_all) = true;
+
+// GenesisState defines the evmbank module's genesis state.
+message GenesisState {
+  option (gogoproto.goproto_getters) = false;
+
+  repeated Account accounts = 1 [ (gogoproto.nullable) = false ];
+}
+
+// BalanceAccount defines an account in the evmbank module.
+message Account {
+  option (gogoproto.goproto_getters) = false;
+
+  bytes address = 1 [ (gogoproto.casttype) =
+                          "github.com/cosmos/cosmos-sdk/types.AccAddress" ];
+
+  // balance indicates the amount of eswth owned by the address.
+  string balance = 2 [
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false
+  ];
+}

@@ -1,0 +1,28 @@
+syntax = "proto3";
+package Switcheo.carbon.inflation;
+
+import "google/api/annotations.proto";
+import "gogoproto/gogo.proto";
+import "Switcheo/carbon/inflation/inflation.proto";
+// this line is used by starport scaffolding # 1
+
+option go_package = "github.com/Switcheo/carbon/x/inflation/types";
+option (gogoproto.goproto_getters_all) = false;
+
+// Query defines the gRPC querier service.
+service Query {
+  // this line is used by starport scaffolding # 2
+
+  // Get mint data
+  rpc MintData(QueryMintDataRequest) returns (QueryMintDataResponse) {
+    option (google.api.http).get = "/carbon/inflation/v1/mint_data";
+  }
+}
+
+// this line is used by starport scaffolding # 3
+
+message QueryMintDataRequest {}
+
+message QueryMintDataResponse {
+  MintData mint_data = 1 [ (gogoproto.nullable) = false ];
+}

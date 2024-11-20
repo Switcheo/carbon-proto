@@ -1,0 +1,31 @@
+syntax = "proto3";
+package Switcheo.carbon.oracle;
+
+option go_package = "github.com/Switcheo/carbon/x/oracle/types";
+option (gogoproto.goproto_getters_all) = false;
+
+import "Switcheo/carbon/oracle/oracle.proto";
+import "gogoproto/gogo.proto";
+import "cosmos_proto/cosmos.proto";
+
+message ResultEvent {
+  Result result = 1;
+  string result_id = 2;
+  string type = 3;
+}
+
+message OracleSlashEvent {
+  string validator = 1 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+  string cons_address = 2;
+  uint64 slash_count = 3;
+  uint64 infraction_height = 4;
+  uint64 power = 5;
+  string slash_factor = 6 [
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
+    (gogoproto.nullable) = false
+  ];
+  string burned_coins = 7 [
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false
+  ];
+}

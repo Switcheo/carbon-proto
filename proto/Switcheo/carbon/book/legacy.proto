@@ -1,0 +1,15 @@
+syntax = "proto3";
+package Switcheo.carbon.book;
+
+option go_package = "github.com/Switcheo/carbon/x/book/types";
+option (gogoproto.goproto_getters_all) = false;
+
+import "gogoproto/gogo.proto";
+
+message StopBook_V2_32_0 {
+  string market_id = 1;
+  repeated string asks = 2;
+  repeated string bids = 3;
+  string trigger = 4;
+  string stop_type = 5;
+}

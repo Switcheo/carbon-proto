@@ -1,0 +1,16 @@
+syntax = "proto3";
+package Switcheo.carbon.erc20;
+
+import "Switcheo/carbon/erc20/erc20.proto";
+import "Switcheo/carbon/erc20/params.proto";
+import "gogoproto/gogo.proto";
+
+option go_package = "github.com/Switcheo/carbon/x/erc20/types";
+
+// GenesisState defines the module's genesis state.
+message GenesisState {
+  // params are the erc20 module parameters at genesis
+  Params params = 1 [ (gogoproto.nullable) = false ];
+  // token_pairs is a slice of the registered token pairs at genesis
+  repeated TokenPair token_pairs = 2 [ (gogoproto.nullable) = false ];
+}

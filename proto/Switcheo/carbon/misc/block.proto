@@ -1,0 +1,17 @@
+syntax = "proto3";
+package Switcheo.carbon.misc;
+
+option go_package = "github.com/Switcheo/carbon/x/misc/types";
+
+import "google/protobuf/timestamp.proto";
+
+import "gogoproto/gogo.proto";
+option (gogoproto.goproto_getters_all) = false;
+
+message Block {
+  uint64 block_height = 1 [ (gogoproto.moretags) = "db:\"block_height\"" ];
+  string time = 2 [ (gogoproto.moretags) = "db:\"time\"" ];
+  uint32 count = 3 [ (gogoproto.moretags) = "db:\"count\"" ];
+  string proposer_address = 4
+      [ (gogoproto.moretags) = "db:\"proposer_address\"" ];
+}

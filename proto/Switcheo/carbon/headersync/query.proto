@@ -1,0 +1,33 @@
+syntax = "proto3";
+package Switcheo.carbon.headersync;
+
+import "gogoproto/gogo.proto";
+import "google/api/annotations.proto";
+import "Switcheo/carbon/headersync/consensus_peers.proto";
+// this line is used by starport scaffolding # 1
+
+option go_package = "github.com/Switcheo/carbon/x/headersync/types";
+
+// Query defines the gRPC querier service.
+service Query {
+  // this line is used by starport scaffolding # 2
+  rpc ConsensusPeers(QueryGetConsensusPeersRequest)
+      returns (QueryGetConsensusPeersResponse) {
+    option (google.api.http).get =
+        "/carbon/headersync/v1/consensus_peers/{chain_id}";
+  }
+}
+
+// this line is used by starport scaffolding # 3
+
+message QueryGetConsensusPeersRequest {
+  option (gogoproto.goproto_getters) = false;
+
+  uint64 chain_id = 1;
+}
+
+message QueryGetConsensusPeersResponse {
+  option (gogoproto.goproto_getters) = false;
+
+  ConsensusPeers consensus_peers = 1 [ (gogoproto.nullable) = false ];
+}

@@ -1,0 +1,25 @@
+syntax = "proto3";
+package Switcheo.carbon.marketstats;
+
+import "gogoproto/gogo.proto";
+import "google/api/annotations.proto";
+import "Switcheo/carbon/marketstats/marketstats.proto";
+// this line is used by starport scaffolding # 1
+
+option go_package = "github.com/Switcheo/carbon/x/marketstats/types";
+
+// Query defines the gRPC querier service.
+service Query {
+  // this line is used by starport scaffolding # 2
+
+  rpc MarketStats(QueryMarketStatsRequest) returns (QueryMarketStatsResponse) {
+    option (google.api.http).get = "/carbon/marketstats/v1/stats";
+  }
+}
+// this line is used by starport scaffolding # 3
+
+message QueryMarketStatsRequest {}
+
+message QueryMarketStatsResponse {
+  repeated MarketStats marketstats = 1 [ (gogoproto.nullable) = false ];
+}

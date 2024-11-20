@@ -1,0 +1,54 @@
+syntax = "proto3";
+package Switcheo.carbon.profile;
+
+import "google/api/annotations.proto";
+import "cosmos/base/query/v1beta1/pagination.proto";
+import "gogoproto/gogo.proto";
+// this line is used by starport scaffolding # 1
+import "Switcheo/carbon/profile/profile.proto";
+
+option go_package = "github.com/Switcheo/carbon/x/profile/types";
+option (gogoproto.goproto_getters_all) = false;
+
+// Query defines the gRPC querier service.
+service Query {
+  // this line is used by starport scaffolding # 2
+
+  // Get profile details for an address
+  rpc Profile(QueryGetProfileRequest) returns (QueryGetProfileResponse) {
+    option (google.api.http).get = "/carbon/profile/v1/profiles/{address}";
+  }
+
+  // Get details for all profiles
+  rpc ProfileAll(QueryAllProfileRequest) returns (QueryAllProfileResponse) {
+    option (google.api.http).get = "/carbon/profile/v1/profiles";
+  }
+
+  // Get details for all profiles
+  rpc ProfileByUsername(QueryProfileByUsernameRequest)
+      returns (QueryProfileByUsernameResponse) {
+    option (google.api.http).get =
+        "/carbon/profile/v1/profiles/username/{username}";
+  }
+}
+// this line is used by starport scaffolding # 3
+message QueryGetProfileRequest { string address = 1; }
+
+message QueryGetProfileResponse {
+  Profile profile = 1 [ (gogoproto.nullable) = false ];
+}
+
+message QueryAllProfileRequest {
+  cosmos.base.query.v1beta1.PageRequest pagination = 1;
+}
+
+message QueryAllProfileResponse {
+  repeated Profile profiles = 1 [ (gogoproto.nullable) = false ];
+  cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+
+message QueryProfileByUsernameRequest { string username = 1; }
+
+message QueryProfileByUsernameResponse {
+  Profile profile = 1 [ (gogoproto.nullable) = false ];
+}

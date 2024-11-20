@@ -1,0 +1,100 @@
+syntax = "proto3";
+package Switcheo.carbon.broker;
+
+option go_package = "github.com/Switcheo/carbon/x/broker/types";
+option (gogoproto.goproto_getters_all) = false;
+
+import "gogoproto/gogo.proto";
+import "google/protobuf/timestamp.proto";
+import "cosmos_proto/cosmos.proto";
+
+message TradeEvent {
+  uint64 id = 17 [ (gogoproto.moretags) = "db:\"id\"" ];
+  int64 block_height = 1 [ (gogoproto.moretags) = "db:\"block_height\"" ];
+  google.protobuf.Timestamp block_created_at = 2 [
+    (gogoproto.moretags) = "db:\"block_created_at\"",
+    (gogoproto.nullable) = false,
+    (gogoproto.stdtime) = true
+  ];
+
+  string market_id = 13 [ (gogoproto.moretags) = "db:\"market\"" ];
+  string price = 14 [
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
+    (gogoproto.moretags) = "db:\"price\"",
+    (gogoproto.nullable) = false
+  ];
+  string quantity = 15 [
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.moretags) = "db:\"quantity\"",
+    (gogoproto.nullable) = false
+  ];
+  string liquidation = 16 [ (gogoproto.moretags) = "db:\"liquidation\"" ];
+
+  string taker_id = 3 [ (gogoproto.moretags) = "db:\"taker_id\"" ];
+  string taker_side = 7 [ (gogoproto.moretags) = "db:\"taker_side\"" ];
+  string taker_address = 4 [
+    (gogoproto.moretags) = "db:\"taker_address\"",
+    (cosmos_proto.scalar) = "cosmos.AddressString"
+  ];
+  string taker_fee_amount = 5 [
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.moretags) = "db:\"taker_fee_amount\"",
+    (gogoproto.nullable) = false
+  ];
+  string taker_fee_denom = 6
+      [ (gogoproto.moretags) = "db:\"taker_fee_denom\"" ];
+  string taker_fee_kickback = 18 [
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.moretags) = "db:\"taker_fee_kickback\"",
+    (gogoproto.nullable) = false
+  ];
+  string taker_fee_commission = 19 [
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.moretags) = "db:\"taker_fee_commission\"",
+    (gogoproto.nullable) = false
+  ];
+  string taker_fee_commission_address = 20
+      [ (gogoproto.moretags) = "db:\"taker_fee_commission_address\"" ];
+
+  string maker_id = 8 [ (gogoproto.moretags) = "db:\"maker_id\"" ];
+  string maker_side = 12 [ (gogoproto.moretags) = "db:\"maker_side\"" ];
+  string maker_address = 9 [
+    (gogoproto.moretags) = "db:\"maker_address\"",
+    (cosmos_proto.scalar) = "cosmos.AddressString"
+  ];
+  string maker_fee_amount = 10 [
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.moretags) = "db:\"maker_fee_amount\"",
+    (gogoproto.nullable) = false
+  ];
+  string maker_fee_denom = 11
+      [ (gogoproto.moretags) = "db:\"maker_fee_denom\"" ];
+  string maker_fee_kickback = 21 [
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.moretags) = "db:\"maker_fee_kickback\"",
+    (gogoproto.nullable) = false
+  ];
+  string maker_fee_commission = 22 [
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.moretags) = "db:\"maker_fee_commission\"",
+    (gogoproto.nullable) = false
+  ];
+  string maker_fee_commission_address = 23
+      [ (gogoproto.moretags) = "db:\"maker_fee_commission_address\"" ];
+}
+
+message FundingEvent {
+  string market_id = 1;
+  string funding_rate = 2 [
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
+    (gogoproto.nullable) = false
+  ];
+  string premium_rate = 3 [
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
+    (gogoproto.nullable) = false
+  ];
+  string borrow_rate = 4 [
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
+    (gogoproto.nullable) = false
+  ];
+}

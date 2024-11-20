@@ -1,0 +1,204 @@
+syntax = "proto3";
+package Switcheo.carbon.market;
+
+// this line is used by starport scaffolding # proto/tx/import
+
+option go_package = "github.com/Switcheo/carbon/x/market/types";
+option (gogoproto.goproto_getters_all) = false;
+
+import "google/protobuf/wrappers.proto";
+import "gogoproto/gogo.proto";
+import "google/protobuf/duration.proto";
+
+// Params defines the parameters for the market module.
+message Params {
+  option (gogoproto.goproto_stringer) = false;
+  string default_lot_size_usd = 1 [
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
+    (gogoproto.nullable) = false
+  ];
+  string default_tick_size_usd = 2 [
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
+    (gogoproto.nullable) = false
+  ];
+  string default_min_quantity_usd = 3 [
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
+    (gogoproto.nullable) = false
+  ];
+  string default_spot_maker_fee = 4 [
+    deprecated = true,
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
+    (gogoproto.moretags) = "db:\"maker_fee\"",
+    (gogoproto.nullable) = false
+  ];
+  string default_spot_taker_fee = 5 [
+    deprecated = true,
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
+    (gogoproto.moretags) = "db:\"taker_fee\"",
+    (gogoproto.nullable) = false
+  ];
+  string default_futures_maker_fee = 6 [
+    deprecated = true,
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
+    (gogoproto.moretags) = "db:\"maker_fee\"",
+    (gogoproto.nullable) = false
+  ];
+  string default_futures_taker_fee = 7 [
+    deprecated = true,
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
+    (gogoproto.moretags) = "db:\"taker_fee\"",
+    (gogoproto.nullable) = false
+  ];
+  string default_risk_step_size_usd = 8 [
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
+    (gogoproto.nullable) = false
+  ];
+  string default_initial_margin_base = 9 [
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
+    (gogoproto.nullable) = false
+  ];
+  string default_initial_margin_step = 10 [
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
+    (gogoproto.nullable) = false
+  ];
+  string default_maintenance_margin_ratio = 11 [
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
+    (gogoproto.nullable) = false
+  ];
+  string default_max_liquidation_order_ticket_usd = 12 [
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
+    (gogoproto.nullable) = false
+  ];
+  google.protobuf.Duration default_max_liquidation_order_duration = 13
+      [ (gogoproto.stdduration) = true, (gogoproto.nullable) = false ];
+  string default_impact_size_usd = 14 [
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
+    (gogoproto.nullable) = false
+  ];
+  uint32 default_mark_price_band = 15;
+  uint32 default_last_price_protected_band = 16;
+  uint32 max_active_markets = 17;
+  uint32 default_trading_bandwidth = 18;
+  string funding_rate_band = 19 [
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
+    (gogoproto.nullable) = false
+  ];
+  string default_lp_spot_taker_fee = 20 [
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
+    (gogoproto.nullable) = false
+  ];
+  string default_lp_spot_maker_fee = 21 [
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
+    (gogoproto.nullable) = false
+  ];
+  string default_lp_futures_taker_fee = 22 [
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
+    (gogoproto.nullable) = false
+  ];
+  string default_lp_futures_maker_fee = 23 [
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
+    (gogoproto.nullable) = false
+  ];
+  string default_max_open_interest_usd = 24 [
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
+    (gogoproto.nullable) = false
+  ];
+}
+
+// ParamsToUpdate allows optional fields for Params.
+message ParamsToUpdate {
+  string default_lot_size_usd = 1 [
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
+    (gogoproto.nullable) = true
+  ];
+  string default_tick_size_usd = 2 [
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
+    (gogoproto.nullable) = true
+  ];
+  string default_min_quantity_usd = 3 [
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
+    (gogoproto.nullable) = true
+  ];
+  string default_spot_maker_fee = 4 [
+    deprecated = true,
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
+    (gogoproto.moretags) = "db:\"maker_fee\"",
+    (gogoproto.nullable) = true
+  ];
+  string default_spot_taker_fee = 5 [
+    deprecated = true,
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
+    (gogoproto.moretags) = "db:\"taker_fee\"",
+    (gogoproto.nullable) = true
+  ];
+  string default_futures_maker_fee = 6 [
+    deprecated = true,
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
+    (gogoproto.moretags) = "db:\"maker_fee\"",
+    (gogoproto.nullable) = true
+  ];
+  string default_futures_taker_fee = 7 [
+    deprecated = true,
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
+    (gogoproto.moretags) = "db:\"taker_fee\"",
+    (gogoproto.nullable) = true
+  ];
+  string default_risk_step_size_usd = 8 [
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
+    (gogoproto.nullable) = true
+  ];
+  string default_initial_margin_base = 9 [
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
+    (gogoproto.nullable) = true
+  ];
+  string default_initial_margin_step = 10 [
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
+    (gogoproto.nullable) = true
+  ];
+  string default_maintenance_margin_ratio = 11 [
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
+    (gogoproto.nullable) = true
+  ];
+  string default_max_liquidation_order_ticket_usd = 12 [
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
+    (gogoproto.nullable) = true
+  ];
+  google.protobuf.Duration default_max_liquidation_order_duration = 13
+      [ (gogoproto.stdduration) = true, (gogoproto.nullable) = true ];
+  string default_impact_size_usd = 14 [
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
+    (gogoproto.nullable) = true
+  ];
+  google.protobuf.UInt32Value default_mark_price_band = 15
+      [ (gogoproto.wktpointer) = true ];
+  google.protobuf.UInt32Value default_last_price_protected_band = 16
+      [ (gogoproto.wktpointer) = true ];
+  google.protobuf.UInt32Value max_active_markets = 17
+      [ (gogoproto.wktpointer) = true ];
+  google.protobuf.UInt32Value default_trading_bandwidth = 18
+      [ (gogoproto.wktpointer) = true ];
+  string funding_rate_band = 19 [
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
+    (gogoproto.nullable) = true
+  ];
+  string default_lp_spot_taker_fee = 20 [
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
+    (gogoproto.nullable) = true
+  ];
+  string default_lp_spot_maker_fee = 21 [
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
+    (gogoproto.nullable) = true
+  ];
+  string default_lp_futures_taker_fee = 22 [
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
+    (gogoproto.nullable) = true
+  ];
+  string default_lp_futures_maker_fee = 23 [
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
+    (gogoproto.nullable) = true
+  ];
+  string default_max_open_interest_usd = 24 [
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
+    (gogoproto.nullable) = true
+  ];
+}

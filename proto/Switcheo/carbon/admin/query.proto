@@ -1,0 +1,33 @@
+syntax = "proto3";
+package Switcheo.carbon.admin;
+
+import "google/api/annotations.proto";
+// this line is used by starport scaffolding # 1
+
+option go_package = "github.com/Switcheo/carbon/x/admin/types";
+
+// Query defines the gRPC querier service.
+service Query {
+  // Queries a list of Admin items.
+  rpc Admin(QueryAdminRequest) returns (QueryAdminResponse) {
+    option (google.api.http).get = "/Switcheo/carbon/admin/admin";
+  }
+
+  // Queries a list of AdminRecipient items.
+  rpc AdminRecipient(QueryAdminRecipientRequest)
+      returns (QueryAdminRecipientResponse) {
+    option (google.api.http).get = "/Switcheo/carbon/admin/admin_recipient";
+  }
+
+  // this line is used by starport scaffolding # 2
+}
+
+message QueryAdminRequest {}
+
+message QueryAdminResponse { string address = 1; }
+
+message QueryAdminRecipientRequest {}
+
+message QueryAdminRecipientResponse { string address = 1; }
+
+// this line is used by starport scaffolding # 3

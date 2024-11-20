@@ -1,0 +1,96 @@
+syntax = "proto3";
+package Switcheo.carbon.perpspool;
+
+import "gogoproto/gogo.proto";
+import "google/protobuf/wrappers.proto";
+
+option go_package = "github.com/Switcheo/carbon/x/perpspool/types";
+option (gogoproto.goproto_getters_all) = false;
+
+import "google/protobuf/timestamp.proto";
+
+message Quote {
+  string quote_price_type = 1 [
+    (gogoproto.customtype) =
+        "github.com/Switcheo/carbon/x/perpspool/exported/types.QuotePriceType",
+    (gogoproto.nullable) = false
+  ];
+  string quote_price_value = 2 [
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
+    (gogoproto.nullable) = false
+  ];
+  string quote_amount_ratio = 3 [
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
+    (gogoproto.nullable) = false
+  ];
+}
+
+// MarketConfig config for each market in the Pool
+message MarketConfig {
+  // unique id representing the market
+  string market_id = 1;
+
+  // ratio of the pool liquidity that can be used for the market
+  // ratio where 0 < max_liquidity_ratio <= 1
+  string max_liquidity_ratio = 2 [
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
+    (gogoproto.nullable) = false
+  ];
+
+  // borrow_fee_multiplier controls the multiplier for the base borrow fee
+  // charged on the pool. riskier markets should have a higher multiplier
+  string borrow_fee_multiplier = 3 [
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
+    (gogoproto.nullable) = false
+  ];
+
+  // Available modes:
+  // active - market is active for quoting
+  // paused - open quotes are cancelled, current positions are held, no new
+  // quotes close_only - quotes will be open only on the closing side. borrow
+  // fees are increased?
+  string mode = 4;
+
+  // represents the shape of quoting for each side against [0] index price, [1+]
+  // prev quotes
+  repeated Quote quote_shape = 5 [ (gogoproto.nullable) = false ];
+}
+
+message UpdateMarketConfigParams {
+  string max_liquidity_ratio = 1
+      [ (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec" ];
+  string borrow_fee_multiplier = 2
+      [ (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec" ];
+  google.protobuf.StringValue mode = 3 [ (gogoproto.wktpointer) = true ];
+  repeated Quote quote_shape = 4 [ (gogoproto.nullable) = false ];
+}
+
+// MarketUtilizationRateSnapshot represents the utilization rate of a market at
+// a given timestamp
+message MarketUtilizationRateSnapshot {
+  google.protobuf.Timestamp timestamp = 1
+      [ (gogoproto.stdtime) = true, (gogoproto.nullable) = false ];
+  string utilization_rate = 2 [
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
+    (gogoproto.nullable) = false
+  ];
+}
+
+// TWAMarketUtilizationRate represents the calculated TWA utilization rate of a
+// market
+message TWAMarketUtilizationRate {
+  google.protobuf.Timestamp last_updated_at = 1
+      [ (gogoproto.stdtime) = true, (gogoproto.nullable) = false ];
+  string twa_utilization_rate = 2 [
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
+    (gogoproto.nullable) = false
+  ];
+}
+
+message MarketLiquidityUsageMultiplier {
+  string market_id = 1;
+  string multiplier = 2 [
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
+    (gogoproto.nullable) = false
+  ];
+}

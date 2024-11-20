@@ -1,0 +1,37 @@
+syntax = "proto3";
+package Switcheo.carbon.evmmerge;
+
+import "cosmos/msg/v1/msg.proto";
+import "cosmos_proto/cosmos.proto";
+import "gogoproto/gogo.proto";
+import "google/protobuf/wrappers.proto";
+import "amino/amino.proto";
+
+// this line is used by starport scaffolding # proto/tx/import
+
+option go_package = "github.com/Switcheo/carbon/x/evmmerge/types";
+
+// Msg defines the Msg service.
+service Msg {
+  option (cosmos.msg.v1.service) = true;
+  // this line is used by starport scaffolding # proto/tx/rpc
+  rpc MergeAccount(MsgMergeAccount) returns (MsgMergeAccountResponse);
+}
+
+message MsgMergeAccount {
+  option (cosmos.msg.v1.signer) = "creator";
+  option (amino.name) = "evmmerge/MsgMergeAccount";
+  option (gogoproto.goproto_getters) = false;
+  // bech32 ETH address if coming from EIP-712, bech32 cosmos address if coming
+  // from typical cosmos tx
+  string creator = 1 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+  // Compressed Public key in hex eg
+  // 034a1e1f95ebb49bc59b3c2d60afbb4c2fb2b77cd1f1e2322123fdacaa3d12f7a9
+  string pub_key = 2;
+  // hex representation of the pub key signature
+  google.protobuf.StringValue pub_key_sig = 4 [ (gogoproto.wktpointer) = true ];
+}
+
+message MsgMergeAccountResponse {}
+
+// this line is used by starport scaffolding # proto/tx/message

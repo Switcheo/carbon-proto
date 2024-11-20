@@ -1,0 +1,151 @@
+syntax = "proto3";
+package Switcheo.carbon.erc20;
+
+import "cosmos/base/v1beta1/coin.proto";
+import "cosmos/msg/v1/msg.proto";
+import "cosmos_proto/cosmos.proto";
+import "Switcheo/carbon/erc20/genesis.proto";
+import "Switcheo/carbon/erc20/params.proto";
+import "gogoproto/gogo.proto";
+import "google/api/annotations.proto";
+import "amino/amino.proto";
+
+option go_package = "github.com/Switcheo/carbon/x/erc20/types";
+
+// Msg defines the erc20 Msg service.
+service Msg {
+  option (cosmos.msg.v1.service) = true;
+  // RegisterToken registers an existing token on the token mapping and deploys
+  // a new ERC20 contract for it
+  rpc RegisterToken(MsgRegisterToken) returns (MsgRegisterTokenResponse);
+  // RegisterERC20 registers an existing erc20 contract on the token mapping and
+  // creates a new cosmos token for it
+  rpc RegisterERC20(MsgRegisterERC20) returns (MsgRegisterERC20Response);
+  // ConvertCoin mints a ERC20 representation of the native Cosmos coin denom
+  // that is registered on the token mapping.
+  rpc ConvertCoin(MsgConvertCoin) returns (MsgConvertCoinResponse);
+  // ConvertERC20 mints a native Cosmos coin representation of the ERC20 token
+  // contract that is registered on the token mapping.
+  rpc ConvertERC20(MsgConvertERC20) returns (MsgConvertERC20Response);
+  // UpdateERC20Enabled updates whether erc20 module functions are enabled
+  rpc UpdateERC20Enabled(MsgUpdateERC20Enabled)
+      returns (MsgUpdateERC20EnabledResponse);
+  // UpdateEVMHookEnabled updates whether erc20 module functions are enabled
+  rpc UpdateEVMHookEnabled(MsgUpdateEVMHookEnabled)
+      returns (MsgUpdateEVMHookEnabledResponse);
+  // UpdateParams defined a governance operation for updating the x/erc20 module
+  // parameters. The authority is hard-coded to the Cosmos SDK x/gov module
+  // account
+  rpc UpdateParams(MsgUpdateParams) returns (MsgUpdateParamsResponse);
+}
+
+// MsgConvertCoin defines a Msg to convert a native Cosmos coin to a ERC20 token
+message MsgConvertCoin {
+  option (cosmos.msg.v1.signer) = "sender";
+  option (amino.name) = "erc20/MsgConvertCoin";
+
+  // coin is a Cosmos coin whose denomination is registered in a token pair. The
+  // coin amount defines the amount of coins to convert.
+  cosmos.base.v1beta1.Coin coin = 1 [ (gogoproto.nullable) = false ];
+  // receiver is the hex address to receive ERC20 token
+  string receiver = 2 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+  // sender is the cosmos bech32 address from the owner of the given Cosmos
+  // coins
+  string sender = 3 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+}
+
+// MsgConvertCoinResponse returns no fields
+message MsgConvertCoinResponse {}
+
+// MsgConvertERC20 defines a Msg to convert a ERC20 token to a native Cosmos
+// coin.
+message MsgConvertERC20 {
+  option (cosmos.msg.v1.signer) = "sender";
+  option (amino.name) = "erc20/MsgConvertERC20";
+  // contract_address of an ERC20 token contract, that is registered in a token
+  // pair
+  string contract_address = 1;
+  // amount of ERC20 tokens to convert
+  string amount = 2 [
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false
+  ];
+  // receiver is the bech32 address to receive native Cosmos coins
+  string receiver = 3 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+  // sender is the merged address (in bech32) of the erc20 account that contains
+  // the tokens to convert
+  string sender = 4 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+}
+
+// MsgConvertERC20Response returns no fields
+message MsgConvertERC20Response {}
+
+// MsgUpdateParams is the Msg/UpdateParams request type for Erc20 parameters.
+// Since: cosmos-sdk 0.47
+message MsgUpdateParams {
+  option (cosmos.msg.v1.signer) = "authority";
+  option (amino.name) = "erc20/MsgUpdateParams";
+
+  // authority is the address of the governance account.
+  string authority = 1 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+
+  // params defines the optional parameters to update.
+  ParamsToUpdate params = 2 [ (gogoproto.nullable) = false ];
+}
+
+// MsgUpdateParamsResponse defines the response structure for executing a
+// MsgUpdateParams message.
+// Since: cosmos-sdk 0.47
+message MsgUpdateParamsResponse {}
+
+// MsgRegisterToken defines a Msg to register an existing token on the token
+// mapping and deploys a new ERC20 contract for it
+message MsgRegisterToken {
+  option (cosmos.msg.v1.signer) = "creator";
+  option (amino.name) = "erc20/MsgRegisterToken";
+
+  string creator = 1 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+  string denom = 2;
+}
+
+message MsgRegisterTokenResponse {
+  // deployed contract
+  string contract_address = 1;
+}
+
+// MsgRegisterERC20 defines a Msg to register an existing erc20 contract on the
+// token mapping and creates a new cosmos token for it
+message MsgRegisterERC20 {
+  option (cosmos.msg.v1.signer) = "creator";
+  option (amino.name) = "erc20/MsgRegisterERC20";
+
+  string creator = 1 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+  string contract_address = 2;
+}
+
+message MsgRegisterERC20Response {
+  // created denom
+  string denom = 1;
+}
+
+// MsgRegisterERC20 defines a Msg
+message MsgUpdateERC20Enabled {
+  option (cosmos.msg.v1.signer) = "creator";
+  option (amino.name) = "erc20/MsgUpdateERC20Enabled";
+
+  string creator = 1 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+  bool is_enabled = 2;
+}
+
+message MsgUpdateERC20EnabledResponse {}
+
+// MsgRegisterERC20 defines a Msg
+message MsgUpdateEVMHookEnabled {
+  option (cosmos.msg.v1.signer) = "creator";
+  option (amino.name) = "erc20/MsgUpdateEVMHookEnabled";
+
+  string creator = 1 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+  bool is_enabled = 2;
+}
+
+message MsgUpdateEVMHookEnabledResponse {}

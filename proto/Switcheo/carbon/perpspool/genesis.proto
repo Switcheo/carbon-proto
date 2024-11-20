@@ -1,0 +1,44 @@
+syntax = "proto3";
+package Switcheo.carbon.perpspool;
+
+import "gogoproto/gogo.proto";
+import "Switcheo/carbon/perpspool/params.proto";
+import "Switcheo/carbon/perpspool/pool.proto";
+import "Switcheo/carbon/perpspool/market.proto";
+// this line is used by starport scaffolding # genesis/proto/import
+
+option go_package = "github.com/Switcheo/carbon/x/perpspool/types";
+option (gogoproto.goproto_getters_all) = false;
+
+// GenesisState defines the perpspool module's genesis state.
+message GenesisState {
+  Params params = 1 [ (gogoproto.nullable) = false ];
+  repeated Pool pools = 2 [ (gogoproto.nullable) = false ];
+  repeated MarketConfigRecord market_config_records = 3
+      [ (gogoproto.nullable) = false ];
+  repeated NavPerShareRecord nav_per_shares = 4
+      [ (gogoproto.nullable) = false ];
+  repeated NavPerShareLastRecordedWithPoolId all_nav_per_share_last_recorded = 5
+      [ (gogoproto.nullable) = false ];
+  // this line is used by starport scaffolding # genesis/proto/state
+}
+
+message MarketConfigRecord {
+  uint64 pool_id = 1;
+  MarketConfig market_config = 2 [ (gogoproto.nullable) = false ];
+}
+
+message NavPerShareRecord {
+  uint64 pool_id = 1;
+  uint64 block_height = 2;
+  string nav_per_share = 3 [
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
+    (gogoproto.nullable) = false
+  ];
+}
+
+message NavPerShareLastRecordedWithPoolId {
+  uint64 pool_id = 1;
+  NavPerShareLastRecorded nav_per_share_last_recorded = 2
+      [ (gogoproto.nullable) = false ];
+}

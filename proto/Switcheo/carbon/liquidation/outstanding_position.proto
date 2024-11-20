@@ -1,0 +1,32 @@
+syntax = "proto3";
+package Switcheo.carbon.liquidation;
+
+option go_package = "github.com/Switcheo/carbon/x/liquidation/types";
+option (gogoproto.goproto_getters_all) = false;
+
+import "gogoproto/gogo.proto";
+import "google/protobuf/timestamp.proto";
+
+message OutstandingPosition {
+  string liquidation_order_id = 1;
+  string market_id = 2;
+  string bankruptcy_price = 3 [
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
+    (gogoproto.nullable) = false
+  ];
+  string lots = 4 [
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false
+  ];
+  google.protobuf.Timestamp block_created_at = 5
+      [ (gogoproto.stdtime) = true, (gogoproto.nullable) = false ];
+  string tick_size = 6 [
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
+    (gogoproto.nullable) = false
+  ];
+}
+
+message OutstandingPositions {
+  repeated OutstandingPosition outstanding_positions = 1
+      [ (gogoproto.nullable) = false ];
+}

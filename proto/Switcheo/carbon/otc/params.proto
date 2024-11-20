@@ -1,0 +1,47 @@
+syntax = "proto3";
+package Switcheo.carbon.otc;
+
+// this line is used by starport scaffolding # proto/tx/import
+
+option go_package = "github.com/Switcheo/carbon/x/otc/types";
+option (gogoproto.goproto_getters_all) = false;
+
+import "google/protobuf/wrappers.proto";
+import "google/protobuf/duration.proto";
+import "gogoproto/gogo.proto";
+import "cosmos_proto/cosmos.proto";
+
+message Params {
+  option (gogoproto.goproto_stringer) = false;
+  repeated string fee_collector_whitelisted_market_makers = 1
+      [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+  repeated string fee_collector_blacklisted_denoms = 2;
+  int64 fee_collector_rfq_block_interval = 3; // ctx.BlockHeight() is int64
+  google.protobuf.Duration fee_collector_rfq_expiry_duration = 4
+      [ (gogoproto.stdduration) = true, (gogoproto.nullable) = false ];
+  google.protobuf.Duration minimum_duration = 5 [
+    (gogoproto.stdduration) = true,
+    (gogoproto.nullable) = false
+  ]; // minimum expiry duration for RFQs and Quotes
+  google.protobuf.Duration maximum_duration = 6 [
+    (gogoproto.stdduration) = true,
+    (gogoproto.nullable) = false
+  ]; // maximum expiry duration for RFQs and Quotes
+  bool enable_fee_conversion = 7;
+}
+
+message ParamsToUpdate {
+  repeated string fee_collector_whitelisted_market_makers = 1
+      [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+  repeated string fee_collector_blacklisted_denoms = 2;
+  google.protobuf.Int64Value fee_collector_rfq_block_interval = 3
+      [ (gogoproto.wktpointer) = true ]; // ctx.BlockHeight() is int64
+  google.protobuf.Duration fee_collector_rfq_expiry_duration = 4
+      [ (gogoproto.stdduration) = true, (gogoproto.wktpointer) = true ];
+  google.protobuf.Duration minimum_duration = 5
+      [ (gogoproto.stdduration) = true, (gogoproto.wktpointer) = true ];
+  google.protobuf.Duration maximum_duration = 6
+      [ (gogoproto.stdduration) = true, (gogoproto.wktpointer) = true ];
+  google.protobuf.BoolValue enable_fee_conversion = 7
+      [ (gogoproto.wktpointer) = true ];
+}

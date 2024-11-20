@@ -1,0 +1,17 @@
+syntax = "proto3";
+package Switcheo.carbon.leverage;
+
+option go_package = "github.com/Switcheo/carbon/x/leverage/types";
+option (gogoproto.goproto_getters_all) = false;
+
+import "gogoproto/gogo.proto";
+
+message LeverageEvent {
+  string leverage = 1 [
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
+    (gogoproto.nullable) = false
+  ];
+  string type = 2;
+  string market_id = 3;
+  string address = 4;
+}

@@ -1,0 +1,40 @@
+syntax = "proto3";
+package Switcheo.carbon.order;
+
+// this line is used by starport scaffolding # genesis/proto/import
+import "Switcheo/carbon/order/order.proto";
+import "Switcheo/carbon/order/params.proto";
+import "cosmos_proto/cosmos.proto";
+import "gogoproto/gogo.proto";
+
+option go_package = "github.com/Switcheo/carbon/x/order/types";
+option (gogoproto.goproto_getters_all) = false;
+
+// GenesisState defines the order module's genesis state.
+message GenesisState {
+  // this line is used by starport scaffolding # genesis/proto/state
+  // this line is used by starport scaffolding # ibc/genesis/proto
+  repeated Order orders = 1 [ (gogoproto.nullable) = false ];
+  repeated GenesisAccountOrderIds account_order_ids = 2
+      [ (gogoproto.nullable) = false ];
+  repeated GenesisAccountSequence account_sequences = 3
+      [ (gogoproto.nullable) = false ];
+  repeated GenesisFlag flags = 4 [ (gogoproto.nullable) = false ];
+  Params params = 5 [ (gogoproto.nullable) = false ];
+}
+
+message GenesisAccountOrderIds {
+  string address = 1 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+  string market_id = 2;
+  OrderIds open_order_ids = 3 [ (gogoproto.nullable) = false ];
+}
+
+message GenesisAccountSequence {
+  string address = 1 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+  uint64 sequence_number = 2;
+}
+
+message GenesisFlag {
+  string blockchain = 1;
+  bool is_trading_enabled = 2;
+}

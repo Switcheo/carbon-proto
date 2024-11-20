@@ -1,0 +1,18 @@
+syntax = "proto3";
+package Switcheo.carbon.otc;
+
+import "gogoproto/gogo.proto";
+import "Switcheo/carbon/otc/params.proto";
+import "Switcheo/carbon/otc/rfq.proto";
+import "Switcheo/carbon/otc/quote.proto";
+
+option go_package = "github.com/Switcheo/carbon/x/otc/types";
+option (gogoproto.goproto_getters_all) = false;
+
+// GenesisState defines the otc module's genesis state.
+message GenesisState {
+  // this line is used by starport scaffolding # genesis/proto/state
+  Params params = 1 [ (gogoproto.nullable) = false ];
+  repeated Rfq rfqs = 2 [ (gogoproto.nullable) = false ];
+  repeated Quote quotes = 3 [ (gogoproto.nullable) = false ];
+}

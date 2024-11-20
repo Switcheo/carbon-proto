@@ -1,0 +1,30 @@
+syntax = "proto3";
+package Switcheo.carbon.misc;
+
+option go_package = "github.com/Switcheo/carbon/x/misc/types";
+option (gogoproto.goproto_getters_all) = false;
+
+import "gogoproto/gogo.proto";
+import "Switcheo/carbon/misc/message_type.proto";
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/wrappers.proto";
+
+message Message {
+  string hash = 1 [ (gogoproto.moretags) = "db:\"hash\"" ];
+  string message = 2 [ (gogoproto.moretags) = "db:\"message\"" ];
+  MessageType message_type = 3
+      [ (gogoproto.moretags) = "db:\",inline\"", (gogoproto.nullable) = false ];
+  google.protobuf.Timestamp block_created_at = 4 [
+    (gogoproto.stdtime) = true,
+    (gogoproto.moretags) = "db:\"time\"",
+    (gogoproto.nullable) = false
+  ];
+  google.protobuf.UInt64Value msg_exec_index = 5 [
+    (gogoproto.moretags) = "db:\"msg_exec_index\"",
+    (gogoproto.wktpointer) = true
+  ];
+  google.protobuf.StringValue granter = 6 [
+    (gogoproto.moretags) = "db:\"granter\"",
+    (gogoproto.wktpointer) = true
+  ];
+}

@@ -1,0 +1,18 @@
+syntax = "proto3";
+package Switcheo.carbon.pricing;
+
+option go_package = "github.com/Switcheo/carbon/x/pricing/types";
+option (gogoproto.goproto_getters_all) = false;
+
+import "gogoproto/gogo.proto";
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/duration.proto";
+
+// Legacy Params from v.2.13.0.
+message Params_V2_13_0 {
+  option (gogoproto.goproto_stringer) = false;
+  uint32 smoothen_band = 1;
+  uint32 impact_band = 2;
+  google.protobuf.Duration stale_index_allowance = 3
+      [ (gogoproto.nullable) = false, (gogoproto.stdduration) = true ];
+}

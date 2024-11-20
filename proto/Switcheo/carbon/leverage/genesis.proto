@@ -1,0 +1,17 @@
+syntax = "proto3";
+package Switcheo.carbon.leverage;
+
+// this line is used by starport scaffolding # genesis/proto/import
+import "gogoproto/gogo.proto";
+import "Switcheo/carbon/leverage/leverage.proto";
+
+option go_package = "github.com/Switcheo/carbon/x/leverage/types";
+option (gogoproto.goproto_getters_all) = false;
+
+// GenesisState defines the leverage module's genesis state.
+message GenesisState {
+  // this line is used by starport scaffolding # genesis/proto/state
+  // this line is used by starport scaffolding # ibc/genesis/proto
+  repeated MarketLeverageRecord market_leverage_records = 1
+      [ (gogoproto.nullable) = false ];
+}

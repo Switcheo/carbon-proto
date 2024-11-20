@@ -1,0 +1,13 @@
+syntax = "proto3";
+package Switcheo.carbon.profile;
+
+option go_package = "github.com/Switcheo/carbon/x/profile/types";
+option (gogoproto.goproto_getters_all) = false;
+
+import "gogoproto/gogo.proto";
+import "Switcheo/carbon/profile/profile.proto";
+
+message UpdateProfileEvent {
+  Profile profile = 1 [ (gogoproto.nullable) = false ];
+  string type = 2;
+}

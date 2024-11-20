@@ -1,0 +1,69 @@
+syntax = "proto3";
+package Switcheo.carbon.oracle;
+
+// this line is used by starport scaffolding # proto/tx/import
+
+option go_package = "github.com/Switcheo/carbon/x/oracle/types";
+option (gogoproto.goproto_getters_all) = false;
+
+import "google/protobuf/wrappers.proto";
+import "gogoproto/gogo.proto";
+import "google/protobuf/duration.proto";
+
+message Params {
+  option (gogoproto.goproto_stringer) = false;
+  bool oracle_slash_enabled = 1;
+  uint32 oracle_slash_window_block = 2;
+  string oracle_slash_initial = 3 [
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
+    (gogoproto.nullable) = false
+  ];
+  string oracle_slash_increment = 4 [
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
+    (gogoproto.nullable) = false
+  ];
+  uint32 oracle_continuous_slash_max = 5;
+  uint32 newly_bonded_window_allowance = 6;
+  google.protobuf.Duration vote_timestamp_future_allowance = 7
+      [ (gogoproto.nullable) = false, (gogoproto.stdduration) = true ];
+  string oracle_min_vote_factor = 8 [
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
+    (gogoproto.nullable) = false
+  ];
+  string max_power_to_slash_factor = 9 [
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
+    (gogoproto.nullable) = false
+  ];
+  bool evm_oracle_enabled = 10;
+}
+
+message ParamsToUpdate {
+  google.protobuf.BoolValue oracle_slash_enabled = 1
+      [ (gogoproto.wktpointer) = true ];
+  google.protobuf.UInt32Value oracle_slash_window_block = 2
+      [ (gogoproto.wktpointer) = true ];
+  string oracle_slash_initial = 3 [
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
+    (gogoproto.nullable) = true
+  ];
+  string oracle_slash_increment = 4 [
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
+    (gogoproto.nullable) = true
+  ];
+  google.protobuf.UInt32Value oracle_continuous_slash_max = 5
+      [ (gogoproto.wktpointer) = true ];
+  google.protobuf.UInt32Value newly_bonded_window_allowance = 6
+      [ (gogoproto.wktpointer) = true ];
+  google.protobuf.Duration vote_timestamp_future_allowance = 7
+      [ (gogoproto.nullable) = true, (gogoproto.stdduration) = true ];
+  string oracle_min_vote_factor = 8 [
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
+    (gogoproto.nullable) = true
+  ];
+  string max_power_to_slash_factor = 9 [
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
+    (gogoproto.nullable) = true
+  ];
+  google.protobuf.BoolValue evm_oracle_enabled = 10
+      [ (gogoproto.wktpointer) = true ];
+}

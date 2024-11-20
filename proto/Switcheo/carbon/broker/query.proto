@@ -1,0 +1,81 @@
+syntax = "proto3";
+package Switcheo.carbon.broker;
+
+import "google/api/annotations.proto";
+import "cosmos/base/query/v1beta1/pagination.proto";
+import "gogoproto/gogo.proto";
+import "cosmos_proto/cosmos.proto";
+
+import "Switcheo/carbon/broker/candlestick.proto";
+import "Switcheo/carbon/broker/event.proto";
+import "Switcheo/carbon/broker/pagination.proto";
+
+// this line is used by starport scaffolding # 1
+
+option go_package = "github.com/Switcheo/carbon/x/broker/types";
+option (gogoproto.goproto_getters_all) = false;
+
+// Query defines the gRPC querier service.
+service Query {
+  // this line is used by starport scaffolding # 2
+
+  // Get candlesticks for a market
+  rpc Candlesticks(QueryCandlesticksRequest)
+      returns (QueryCandlesticksResponse) {
+    option (google.api.http).get = "/carbon/broker/v1/candlesticks";
+  }
+
+  // Get trade history for a market
+  rpc Trades(QueryTradesRequest) returns (QueryTradesResponse) {
+    option (google.api.http).get = "/carbon/broker/v1/trades";
+  }
+
+  // Get trades for a position
+  rpc TradesForPosition(QueryTradesForPositionRequest)
+      returns (QueryTradesForPositionResponse) {
+    option (google.api.http).get =
+        "/carbon/broker/v1/trades/{address}/{market_id}/{opened_block_height}";
+  }
+}
+
+// this line is used by starport scaffolding # 3
+
+message QueryCandlesticksRequest {
+  string market_id = 1;
+  uint64 resolution = 2;
+  uint64 from = 3;
+  uint64 to = 4;
+}
+
+message QueryCandlesticksResponse {
+  repeated Candlestick candlesticks = 1 [ (gogoproto.nullable) = false ];
+}
+
+message QueryTradesRequest {
+  string address = 1 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+  string market_id = 2;
+  uint64 before_id = 3;
+  uint64 after_id = 4;
+  string order_id = 5;
+  uint64 after_block = 6;
+  uint64 before_block = 7;
+  cosmos.base.query.v1beta1.PageRequest pagination = 8;
+}
+
+message QueryTradesResponse {
+  repeated TradeEvent trades = 1 [ (gogoproto.nullable) = false ];
+  MinMaxBoundary MinMaxBoundary = 2;
+  cosmos.base.query.v1beta1.PageResponse pagination = 3;
+}
+
+message QueryTradesForPositionRequest {
+  string address = 1 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+  string market_id = 2;
+  uint64 opened_block_height = 3;
+  cosmos.base.query.v1beta1.PageRequest pagination = 4;
+}
+
+message QueryTradesForPositionResponse {
+  repeated TradeEvent trades = 1 [ (gogoproto.nullable) = false ];
+  cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}

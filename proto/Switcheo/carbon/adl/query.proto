@@ -1,0 +1,15 @@
+syntax = "proto3";
+package Switcheo.carbon.adl;
+
+import "gogoproto/gogo.proto";
+// this line is used by starport scaffolding # 1
+
+option go_package = "github.com/Switcheo/carbon/x/adl/types";
+option (gogoproto.goproto_getters_all) = false;
+
+// Query defines the gRPC querier service.
+service Query {
+  // this line is used by starport scaffolding # 2
+}
+
+// this line is used by starport scaffolding # 3

@@ -1,0 +1,17 @@
+syntax = "proto3";
+package Switcheo.carbon.inflation;
+
+import "gogoproto/gogo.proto";
+import "cosmos/msg/v1/msg.proto";
+// this line is used by starport scaffolding # proto/tx/import
+
+option go_package = "github.com/Switcheo/carbon/x/inflation/types";
+option (gogoproto.goproto_getters_all) = false;
+
+// Msg defines the Msg service.
+service Msg {
+  option (cosmos.msg.v1.service) = true;
+  // this line is used by starport scaffolding # proto/tx/rpc
+}
+
+// this line is used by starport scaffolding # proto/tx/message

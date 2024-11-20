@@ -1,0 +1,141 @@
+syntax = "proto3";
+package Switcheo.carbon.liquiditypool;
+
+option go_package = "github.com/Switcheo/carbon/x/liquiditypool/types";
+option (gogoproto.goproto_getters_all) = false;
+
+import "cosmos/base/v1beta1/coin.proto";
+import "gogoproto/gogo.proto";
+import "google/protobuf/timestamp.proto";
+
+message RewardCurve {
+  google.protobuf.Timestamp start_time = 1
+      [ (gogoproto.nullable) = false, (gogoproto.stdtime) = true ];
+  uint32 initial_reward = 2;
+  uint64 interval = 3;
+  uint32 number_of_reductions = 4;
+  uint32 reduction = 5;
+  uint32 final_reward = 6;
+  uint32 reductions_made = 7;
+}
+
+message CommitmentCurve {
+  uint64 max_commitment_duration = 1;
+  uint32 max_reward_multiplier = 2;
+}
+
+message RewardWeight {
+  uint64 pool_id = 1;
+  string weight = 2 [
+    (gogoproto.customtype) = "cosmossdk.io/math.Uint",
+    (gogoproto.nullable) = false
+  ];
+}
+
+message RewardWeights {
+  repeated RewardWeight weights = 1 [ (gogoproto.nullable) = false ];
+}
+
+message Commitment {
+  uint64 pool_id = 1;
+  cosmos.base.v1beta1.Coin liquidity = 2 [ (gogoproto.nullable) = false ];
+  google.protobuf.Timestamp start_time = 3
+      [ (gogoproto.nullable) = false, (gogoproto.stdtime) = true ];
+  uint64 duration = 4;
+  repeated cosmos.base.v1beta1.DecCoin reward_debt = 5 [
+    (gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.DecCoins",
+    (gogoproto.nullable) = false,
+    (gogoproto.moretags) = "yaml:\"reward_debt\""
+  ];
+}
+
+message CommitmentRecord {
+  string address = 1;
+  Commitment commitment = 2 [ (gogoproto.nullable) = false ];
+}
+
+message TotalCommitment {
+  string total = 1 [
+    (gogoproto.customtype) = "cosmossdk.io/math.Uint",
+    (gogoproto.nullable) = false
+  ];
+}
+
+message TotalCommitmentRecord {
+  uint64 pool_id = 1;
+  TotalCommitment total_commitment = 2 [ (gogoproto.nullable) = false ];
+}
+
+message CommitmentResponse {
+  string denom = 1;
+  string amount = 2 [
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
+    (gogoproto.nullable) = false
+  ];
+  ;
+  google.protobuf.Timestamp start_time = 3
+      [ (gogoproto.nullable) = false, (gogoproto.stdtime) = true ];
+  google.protobuf.Timestamp end_time = 4
+      [ (gogoproto.nullable) = false, (gogoproto.stdtime) = true ];
+  uint64 duration = 5;
+  bool is_locked = 6;
+  string commitment_power = 7 [
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false
+  ];
+  string boost_factor = 8 [
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
+    (gogoproto.nullable) = false
+  ];
+}
+
+// Deprecated: use AccumulatedRewards
+message RewardHistory {
+  uint64 pool_id = 1;
+  repeated cosmos.base.v1beta1.DecCoin rewards = 2 [
+    (gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.DecCoins",
+    (gogoproto.nullable) = false
+  ];
+  string total_commitment = 3 [
+    (gogoproto.customtype) = "cosmossdk.io/math.Uint",
+    (gogoproto.nullable) = false
+  ];
+}
+
+message AccumulatedRewards {
+  repeated cosmos.base.v1beta1.DecCoin reward_per_commitment_share = 1 [
+    (gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.DecCoins",
+    (gogoproto.nullable) = false,
+    (gogoproto.moretags) = "yaml:\"reward_per_commitment_share\""
+  ];
+}
+
+message AccumulatedRewardsRecord {
+  uint64 pool_id = 1 [ (gogoproto.moretags) = "yaml:\"pool_id\"" ];
+  AccumulatedRewards accumulated_rewards = 2 [
+    (gogoproto.moretags) = "yaml:\"accumulated_rewards\"",
+    (gogoproto.nullable) = false
+  ];
+}
+
+message CommitmentExpiry {
+  uint64 pool_id = 1;
+  string address = 2;
+}
+
+message CommitmentExpiries {
+  repeated CommitmentExpiry commitment_expiries = 1
+      [ (gogoproto.nullable) = false ];
+}
+
+message CommitmentExpiriesRecord {
+  uint64 expiry_time = 1;
+  CommitmentExpiries commitment_expiries = 2 [ (gogoproto.nullable) = false ];
+}
+
+message AllocatedRewards {
+  repeated cosmos.base.v1beta1.DecCoin coins = 1 [
+    (gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.DecCoins",
+    (gogoproto.nullable) = false
+  ];
+}

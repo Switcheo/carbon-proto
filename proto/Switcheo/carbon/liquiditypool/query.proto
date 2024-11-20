@@ -1,0 +1,247 @@
+syntax = "proto3";
+package Switcheo.carbon.liquiditypool;
+
+import "gogoproto/gogo.proto";
+import "google/api/annotations.proto";
+import "cosmos/base/query/v1beta1/pagination.proto";
+import "google/protobuf/timestamp.proto";
+import "cosmos/base/v1beta1/coin.proto";
+import "cosmos_proto/cosmos.proto";
+// this line is used by starport scaffolding # 1
+
+import "Switcheo/carbon/liquiditypool/reward.proto";
+import "Switcheo/carbon/liquiditypool/liquiditypool.proto";
+import "Switcheo/carbon/liquiditypool/params.proto";
+
+option go_package = "github.com/Switcheo/carbon/x/liquiditypool/types";
+option (gogoproto.goproto_getters_all) = false;
+
+// Query defines the gRPC querier service.
+service Query {
+  // this line is used by starport scaffolding # 2
+
+  // Get addresses for all pools
+  rpc PoolAddressAll(QueryAllPoolAddressRequest)
+      returns (QueryAllPoolAddressResponse) {
+    option (google.api.http).get = "/carbon/liquiditypool/v1/pools/addresses";
+  }
+
+  // Get pool details
+  rpc Pool(QueryGetPoolRequest) returns (QueryGetPoolResponse) {
+    option (google.api.http).get = "/carbon/liquiditypool/v1/pools/{id}";
+  }
+
+  // Get details for all pools
+  rpc PoolAll(QueryAllPoolRequest) returns (QueryAllPoolResponse) {
+    option (google.api.http).get = "/carbon/liquiditypool/v1/pools";
+  }
+
+  // Get LP commitment for a pool and address
+  rpc Commitment(QueryCommitmentRequest) returns (QueryCommitmentResponse) {
+    option (google.api.http).get =
+        "/carbon/liquiditypool/v1/commitment/{pool_id}/{address}";
+  }
+
+  // Get all LP commitments for an address
+  rpc CommitmentAll(QueryAllCommitmentRequest)
+      returns (QueryAllCommitmentResponse) {
+    option (google.api.http).get =
+        "/carbon/liquiditypool/v1/commitments/{address}";
+  }
+
+  // Get the current commitment reward boost curve
+  rpc CommitmentCurve(QueryCommitmentCurveRequest)
+      returns (QueryCommitmentCurveResponse) {
+    option (google.api.http).get = "/carbon/liquiditypool/v1/commitment_curve";
+  }
+
+  // Get the current LP reward curve
+  rpc RewardCurve(QueryRewardCurveRequest) returns (QueryRewardCurveResponse) {
+    option (google.api.http).get = "/carbon/liquiditypool/v1/reward_curve";
+  }
+
+  // Get the total commitment power for a pool
+  rpc TotalCommitment(QueryTotalCommitmentRequest)
+      returns (QueryTotalCommitmentResponse) {
+    option (google.api.http).get =
+        "/carbon/liquiditypool/v1/total_commitment/{pool_id}";
+  }
+
+  // Get commitment powers for all pools
+  rpc TotalCommitmentAll(QueryAllTotalCommitmentRequest)
+      returns (QueryAllTotalCommitmentResponse) {
+    option (google.api.http).get = "/carbon/liquiditypool/v1/total_commitment";
+  }
+
+  // Get currently claimable rewards for a pool for the given address
+  rpc ClaimableRewards(QueryClaimableRewardsRequest)
+      returns (QueryClaimableRewardsResponse) {
+    option (google.api.http).get =
+        "/carbon/liquiditypool/v1/claimable_rewards/{pool_id}/{address}";
+  }
+
+  // Get allocated rewards
+  rpc AllocatedRewards(QueryAllocatedRewardsRequest)
+      returns (QueryAllocatedRewardsResponse) {
+    option (google.api.http).get = "/carbon/liquiditypool/v1/allocated_rewards";
+  }
+
+  rpc Params(QueryParamsRequest) returns (QueryParamsResponse) {
+    option (google.api.http).get = "/carbon/liquiditypool/v1/params";
+  }
+
+  // Get liquidity pool addresses for all pools
+  rpc PoolRouteAll(QueryAllPoolRouteRequest)
+      returns (QueryAllPoolRouteResponse) {
+    option (google.api.http).get = "/carbon/liquiditypool/v1/pool_routes";
+  }
+
+  // Get addresses for all pool route
+  rpc PoolRouteAddressAll(QueryAllPoolRouteAddressRequest)
+      returns (QueryAllPoolRouteAddressResponse) {
+    option (google.api.http).get =
+        "/carbon/liquiditypool/v1/pool_routes/addresses";
+  }
+}
+
+// this line is used by starport scaffolding # 3
+message QueryGetPoolRequest { uint64 id = 1; }
+
+message QueryGetPoolResponse {
+  ExtendedPool pool = 1 [ (gogoproto.nullable) = false ];
+}
+
+message QueryAllPoolRequest {
+  cosmos.base.query.v1beta1.PageRequest pagination = 1;
+}
+
+message QueryAllPoolResponse {
+  repeated ExtendedPool pools = 1 [ (gogoproto.nullable) = false ];
+  cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+
+message QueryAllPoolAddressRequest {
+  cosmos.base.query.v1beta1.PageRequest pagination = 1;
+}
+
+message QueryAllPoolAddressResponse {
+  map<string, string> addresses = 1;
+  cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+
+message ExtendedPool {
+  Pool pool = 1 [ (gogoproto.nullable) = false ];
+  string rewards_weight = 2 [
+    (gogoproto.customtype) = "cosmossdk.io/math.Uint",
+    (gogoproto.nullable) = false
+  ];
+  string total_commitment = 3 [
+    (gogoproto.customtype) = "cosmossdk.io/math.Uint",
+    (gogoproto.nullable) = false
+  ];
+  repeated cosmos.base.v1beta1.DecCoin reward_per_commitment_share = 4 [
+    (gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.DecCoins",
+    (gogoproto.nullable) = false,
+    (gogoproto.moretags) = "yaml:\"reward_per_commitment_share\""
+  ];
+}
+
+message QueryCommitmentRequest {
+  string pool_id = 1;
+  string address = 2;
+}
+
+message QueryCommitmentResponse {
+  CommitmentResponse commitment = 1 [ (gogoproto.nullable) = false ];
+}
+
+message QueryAllCommitmentRequest {
+  string address = 1;
+  cosmos.base.query.v1beta1.PageRequest pagination = 2;
+}
+
+message QueryAllCommitmentResponse {
+  repeated Commitment commitments = 1 [ (gogoproto.nullable) = false ];
+  cosmos.base.query.v1beta1.PageResponse pagination = 2;
+  google.protobuf.Timestamp block_time = 3
+      [ (gogoproto.stdtime) = true, (gogoproto.nullable) = false ];
+}
+
+message QueryCommitmentCurveRequest {}
+
+message QueryCommitmentCurveResponse {
+  CommitmentCurve commitment_curve = 1 [ (gogoproto.nullable) = false ];
+}
+
+message QueryRewardCurveRequest {}
+
+message QueryRewardCurveResponse {
+  RewardCurve reward_curve = 1 [ (gogoproto.nullable) = false ];
+}
+
+message QueryTotalCommitmentRequest { uint64 pool_id = 1; }
+
+message QueryTotalCommitmentResponse {
+  string total_commitment = 1 [
+    (gogoproto.customtype) = "cosmossdk.io/math.Uint",
+    (gogoproto.nullable) = false
+  ];
+}
+
+message QueryAllTotalCommitmentRequest {
+  cosmos.base.query.v1beta1.PageRequest pagination = 1;
+}
+
+message QueryAllTotalCommitmentResponse {
+  repeated TotalCommitmentRecord total_commitments = 1
+      [ (gogoproto.nullable) = false ];
+  cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+
+message QueryClaimableRewardsRequest {
+  uint64 pool_id = 1;
+  string address = 2;
+}
+
+message QueryClaimableRewardsResponse {
+  repeated cosmos.base.v1beta1.DecCoin rewards = 1 [
+    (gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.DecCoins",
+    (gogoproto.nullable) = false
+  ];
+}
+
+message QueryAllocatedRewardsRequest {}
+
+message QueryAllocatedRewardsResponse {
+  repeated cosmos.base.v1beta1.DecCoin rewards = 1 [
+    (gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.DecCoins",
+    (gogoproto.nullable) = false
+  ];
+}
+
+// QueryParamsRequest is request type for the Query/Params RPC method.
+message QueryParamsRequest {}
+
+// QueryParamsResponse is response type for the Query/Params RPC method.
+message QueryParamsResponse {
+  // params holds all the parameters of this module.
+  Params params = 1 [ (gogoproto.nullable) = false ];
+}
+
+message QueryAllPoolRouteRequest {
+  cosmos.base.query.v1beta1.PageRequest pagination = 1;
+}
+
+message QueryAllPoolRouteResponse {
+  repeated PoolRoute pool_routes = 1 [ (gogoproto.nullable) = false ];
+  cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+
+message QueryAllPoolRouteAddressRequest {
+  cosmos.base.query.v1beta1.PageRequest pagination = 1;
+}
+
+message QueryAllPoolRouteAddressResponse {
+  map<string, string> addresses = 1;
+  cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}

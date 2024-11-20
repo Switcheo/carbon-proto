@@ -1,0 +1,18 @@
+syntax = "proto3";
+package Switcheo.carbon.fee;
+
+// this line is used by starport scaffolding # genesis/proto/import
+import "Switcheo/carbon/fee/fee.proto";
+import "gogoproto/gogo.proto";
+
+option go_package = "github.com/Switcheo/carbon/x/fee/types";
+option (gogoproto.goproto_getters_all) = false;
+
+// GenesisState defines the fee module's genesis state.
+message GenesisState {
+  option (gogoproto.goproto_getters) = false;
+  // this line is used by starport scaffolding # genesis/proto/state
+  repeated MsgGasCost msg_gas_costs = 1 [ (gogoproto.nullable) = false ];
+  // this line is used by starport scaffolding # ibc/genesis/proto
+  repeated MinGasPrice min_gas_prices = 2 [ (gogoproto.nullable) = false ];
+}

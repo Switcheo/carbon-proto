@@ -1,0 +1,23 @@
+syntax = "proto3";
+package Switcheo.carbon.coin;
+
+// this line is used by starport scaffolding # genesis/proto/import
+import "Switcheo/carbon/coin/bridge.proto";
+import "Switcheo/carbon/coin/token.proto";
+import "Switcheo/carbon/coin/group.proto";
+import "gogoproto/gogo.proto";
+
+option go_package = "github.com/Switcheo/carbon/x/coin/types";
+option (gogoproto.goproto_getters_all) = false;
+
+// GenesisState defines the coin module's genesis state.
+message GenesisState {
+  // this line is used by starport scaffolding # genesis/proto/state
+  repeated Token tokens = 1 [ (gogoproto.nullable) = false ];
+  map<string, string> wrapper_mappings = 2;
+  repeated LockedCoinsRecord locked_coins = 3 [ (gogoproto.nullable) = false ];
+  repeated PositionPool position_pools = 4 [ (gogoproto.nullable) = false ];
+  repeated Bridge bridges = 5 [ (gogoproto.nullable) = false ];
+  repeated TokenGroupDetails groups = 6 [ (gogoproto.nullable) = false ];
+  // this line is used by starport scaffolding # ibc/genesis/proto
+}

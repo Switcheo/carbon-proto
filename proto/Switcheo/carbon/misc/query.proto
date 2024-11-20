@@ -1,0 +1,104 @@
+syntax = "proto3";
+package Switcheo.carbon.misc;
+
+import "google/api/annotations.proto";
+import "cosmos/base/query/v1beta1/pagination.proto";
+import "cosmos_proto/cosmos.proto";
+import "gogoproto/gogo.proto";
+
+import "Switcheo/carbon/misc/block.proto";
+import "Switcheo/carbon/misc/message_type.proto";
+import "Switcheo/carbon/misc/transaction.proto";
+import "Switcheo/carbon/order/order.proto";
+
+// this line is used by starport scaffolding # 1
+
+option go_package = "github.com/Switcheo/carbon/x/misc/types";
+option (gogoproto.goproto_getters_all) = false;
+
+// Query defines the gRPC querier service.
+service Query {
+  rpc Search(QuerySearchRequest) returns (QuerySearchResponse) {
+    option (google.api.http).get = "/carbon/misc/v1/search";
+  }
+
+  // Get all message types
+  rpc MessageTypeAll(QueryAllMessageTypeRequest)
+      returns (QueryAllMessageTypeResponse) {
+    option (google.api.http).get = "/carbon/misc/v1/message_types";
+  }
+
+  // Get all transactions
+  rpc TransactionAll(QueryAllTransactionRequest)
+      returns (QueryAllTransactionResponse) {
+    option (google.api.http).get = "/carbon/misc/v1/transactions";
+  }
+
+  // Get all blocks
+  rpc BlockAll(QueryAllBlockRequest) returns (QueryAllBlockResponse) {
+    option (google.api.http).get = "/carbon/misc/v1/blocks";
+  }
+
+  // Get all module addresses
+  rpc ModuleAddressAll(QueryAllModuleAddressRequest)
+      returns (QueryAllModuleAddressResponse) {
+    option (google.api.http).get = "/carbon/misc/v1/module_addresses";
+  }
+
+  // Get module address
+  rpc ModuleAddress(QueryModuleAddressRequest)
+      returns (QueryModuleAddressResponse) {
+    option (google.api.http).get = "/carbon/misc/v1/module_addresses/{module}";
+  }
+}
+
+message QuerySearchRequest { string keyword = 1; }
+
+message QuerySearchResponse {
+  repeated Transaction transactions = 1 [ (gogoproto.nullable) = false ];
+  repeated order.Order orders = 2 [ (gogoproto.nullable) = false ];
+  repeated string messageTypes = 3;
+  repeated Block blocks = 4 [ (gogoproto.nullable) = false ];
+  repeated Address addresses = 5 [ (gogoproto.nullable) = false ];
+}
+
+message QueryAllMessageTypeRequest {}
+
+message QueryAllMessageTypeResponse {
+  repeated MessageType messageTypes = 1 [ (gogoproto.nullable) = false ];
+}
+
+message QueryAllTransactionRequest {
+  string hash = 1;
+  string address = 2 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+  repeated string msgTypeFilters = 3;
+  cosmos.base.query.v1beta1.PageRequest pagination = 4;
+}
+
+message QueryAllTransactionResponse {
+  repeated Transaction transactions = 1 [ (gogoproto.nullable) = false ];
+  cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+
+message QueryAllBlockRequest {
+  cosmos.base.query.v1beta1.PageRequest pagination = 1;
+}
+
+message QueryAllBlockResponse {
+  repeated Block blocks = 1 [ (gogoproto.nullable) = false ];
+  cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+
+message QueryAllModuleAddressRequest {}
+
+message QueryAllModuleAddressResponse { map<string, string> addresses = 1; }
+
+message QueryModuleAddressRequest { string module = 1; }
+
+message QueryModuleAddressResponse { string address = 1; }
+
+message Address {
+  string name = 1;
+  string address = 2 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+  string type = 3;
+}

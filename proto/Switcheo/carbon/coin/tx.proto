@@ -1,0 +1,392 @@
+syntax = "proto3";
+package Switcheo.carbon.coin;
+
+import "gogoproto/gogo.proto";
+import "cosmos/base/v1beta1/coin.proto";
+import "Switcheo/carbon/coin/bridge.proto";
+import "Switcheo/carbon/coin/group.proto";
+import "google/protobuf/wrappers.proto";
+import "cosmos/msg/v1/msg.proto";
+import "cosmos_proto/cosmos.proto";
+import "amino/amino.proto";
+
+option go_package = "github.com/Switcheo/carbon/x/coin/types";
+option (gogoproto.goproto_getters_all) = false;
+
+// Msg defines the Msg service.
+service Msg {
+  option (cosmos.msg.v1.service) = true;
+
+  rpc CreateToken(MsgCreateToken) returns (MsgCreateTokenResponse);
+  rpc SyncToken(MsgSyncToken) returns (MsgSyncTokenResponse);
+  rpc MintToken(MsgMintToken) returns (MsgMintTokenResponse);
+  rpc BindToken(MsgBindToken) returns (MsgBindTokenResponse);
+  rpc UnbindToken(MsgUnbindToken) returns (MsgUnbindTokenResponse);
+  rpc LinkToken(MsgLinkToken) returns (MsgLinkTokenResponse);
+
+  rpc Withdraw(MsgWithdraw) returns (MsgWithdrawResponse);
+
+  rpc AuthorizeBridge(MsgAuthorizeBridge) returns (MsgAuthorizeBridgeResponse);
+  rpc DeauthorizeBridge(MsgDeauthorizeBridge)
+      returns (MsgDeauthorizeBridgeResponse);
+
+  rpc EditBridgeName(MsgEditBridgeName) returns (MsgEditBridgeNameResponse);
+  rpc RemoveBridge(MsgRemoveBridge) returns (MsgRemoveBridgeResponse);
+  rpc UpdateToken(MsgUpdateToken) returns (MsgUpdateTokenResponse);
+
+  rpc AddBridgeAddress(MsgAddBridgeAddress)
+      returns (MsgAddBridgeAddressResponse);
+  rpc RemoveBridgeAddress(MsgRemoveBridgeAddress)
+      returns (MsgRemoveBridgeAddressResponse);
+
+  rpc CreateGroup(MsgCreateGroup) returns (MsgCreateGroupResponse);
+  rpc UpdateGroup(MsgUpdateGroup) returns (MsgUpdateGroupResponse);
+  rpc RegisterToGroup(MsgRegisterToGroup) returns (MsgRegisterToGroupResponse);
+  rpc DeregisterFromGroup(MsgDeregisterFromGroup)
+      returns (MsgDeregisterFromGroupResponse);
+  rpc DepositToGroup(MsgDepositToGroup) returns (MsgDepositToGroupResponse);
+  rpc WithdrawFromGroup(MsgWithdrawFromGroup)
+      returns (MsgWithdrawFromGroupResponse);
+  rpc UpdateGroupedTokenConfig(MsgUpdateGroupedTokenConfig)
+      returns (MsgUpdateGroupedTokenConfigResponse);
+  // this line is used by starport scaffolding # proto/tx/rpc
+}
+
+// this line is used by starport scaffolding # proto/tx/message
+message MsgCreateToken {
+  option (cosmos.msg.v1.signer) = "creator";
+  option (amino.name) = "carbon/MsgCreateToken";
+  option (gogoproto.goproto_getters) = false;
+
+  string creator = 1 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+  CreateTokenParams create_token_params = 2 [ (gogoproto.nullable) = false ];
+}
+
+message CreateTokenParams {
+  option (gogoproto.goproto_getters) = false;
+
+  string creator = 1 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+  string name = 2;
+  string symbol = 3;
+  int64 decimals = 4;
+  uint64 chain_id = 5;
+  uint64 bridge_id = 6;
+  string bridge_address = 7;
+  string token_address = 8;
+}
+
+message MsgCreateTokenResponse { string denom = 1; }
+
+message MsgSyncToken {
+  option (cosmos.msg.v1.signer) = "syncer";
+  option (amino.name) = "carbon/MsgSyncToken";
+  option (gogoproto.goproto_getters) = false;
+
+  string syncer = 1 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+  string denom = 2;
+}
+
+message MsgSyncTokenResponse {}
+
+message MsgMintToken {
+  option (cosmos.msg.v1.signer) = "creator";
+  option (amino.name) = "carbon/MsgMintToken";
+
+  string creator = 1 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+  string denom = 2;
+  string amount = 3 [
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false
+  ];
+  string to = 4;
+}
+
+message MsgMintTokenResponse {}
+
+message MsgBindToken {
+  option (cosmos.msg.v1.signer) = "creator";
+  option (amino.name) = "carbon/MsgBindToken";
+
+  string creator = 1 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+  string source_denom = 2;
+  string wrapped_denom = 3;
+}
+
+message MsgBindTokenResponse {}
+
+message MsgUnbindToken {
+  option (cosmos.msg.v1.signer) = "creator";
+  option (amino.name) = "carbon/MsgUnbindToken";
+
+  string creator = 1 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+  string wrapped_denom = 2;
+}
+
+message MsgUnbindTokenResponse {}
+
+message MsgLinkToken {
+  option (cosmos.msg.v1.signer) = "creator";
+  option (amino.name) = "carbon/MsgLinkToken";
+
+  string creator = 1 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+  string denom = 2;
+  string bridge_address = 3;
+}
+
+message MsgLinkTokenResponse {}
+
+message MsgWithdraw {
+  option (cosmos.msg.v1.signer) = "creator";
+  option (amino.name) = "carbon/MsgWithdraw";
+
+  string creator = 1 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+  string to_address = 2;
+  string denom = 3;
+  string amount = 4 [
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false
+  ];
+  string fee_amount = 5 [
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false
+  ];
+  string fee_address = 6;
+  string fee_denom = 7;
+}
+
+message MsgWithdrawResponse {}
+
+message MsgAuthorizeBridge {
+  option (cosmos.msg.v1.signer) = "creator";
+  option (amino.name) = "carbon/MsgAuthorizeBridge";
+
+  string creator = 1 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+  uint64 bridge_id = 2 [ (gogoproto.moretags) = "db:\"bridge_id\"" ];
+  uint64 chain_id = 3 [ (gogoproto.moretags) = "db:\"chain_id\"" ];
+  string chain_name = 4 [ (gogoproto.moretags) = "db:\"chain_name\"" ];
+}
+
+message MsgAuthorizeBridgeResponse {
+  string id = 1;
+  Bridge bridge = 2;
+}
+
+message MsgDeauthorizeBridge {
+  option (cosmos.msg.v1.signer) = "initiator";
+  option (amino.name) = "carbon/MsgDeauthorizeBridge";
+
+  string initiator = 1 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+  uint64 bridge_id = 2 [ (gogoproto.moretags) = "db:\"bridge_id\"" ];
+  uint64 chain_id = 3 [ (gogoproto.moretags) = "db:\"chain_id\"" ];
+}
+
+message MsgDeauthorizeBridgeResponse {
+  string id = 1;
+  Bridge bridge = 2;
+}
+
+message MsgEditBridgeName {
+  option (cosmos.msg.v1.signer) = "initiator";
+  option (amino.name) = "carbon/MsgEditBridgeName";
+
+  string initiator = 1 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+  uint64 bridge_id = 2 [ (gogoproto.moretags) = "db:\"bridge_id\"" ];
+  uint64 chain_id = 3 [ (gogoproto.moretags) = "db:\"chain_id\"" ];
+  string new_bridge_name = 4;
+}
+
+message MsgEditBridgeNameResponse {
+  string id = 1;
+  Bridge bridge = 2;
+}
+
+message MsgRemoveBridge {
+  option (cosmos.msg.v1.signer) = "initiator";
+  option (amino.name) = "carbon/MsgRemoveBridge";
+
+  string initiator = 1 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+  uint64 bridge_id = 2 [ (gogoproto.moretags) = "db:\"bridge_id\"" ];
+  uint64 chain_id = 3 [ (gogoproto.moretags) = "db:\"chain_id\"" ];
+}
+
+message MsgRemoveBridgeResponse {}
+
+message MsgUpdateToken {
+  option (cosmos.msg.v1.signer) = "updater";
+  option (amino.name) = "coin/UpdateToken";
+
+  string updater = 1 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+  string denom = 2;
+  UpdateTokenParams update_token_params = 3 [ (gogoproto.nullable) = false ];
+}
+
+message UpdateTokenParams {
+  google.protobuf.BoolValue is_active = 1 [
+    (gogoproto.moretags) = "db:\"is_active\"",
+    (gogoproto.wktpointer) = true
+  ];
+  reserved 2; // used to be is_collateral, but deprecated as not used in token
+              // struct
+  google.protobuf.StringValue name = 3
+      [ (gogoproto.moretags) = "db:\"name\"", (gogoproto.wktpointer) = true ];
+  google.protobuf.StringValue symbol = 4
+      [ (gogoproto.moretags) = "db:\"symbol\"", (gogoproto.wktpointer) = true ];
+  google.protobuf.Int64Value decimals = 5 [
+    (gogoproto.moretags) = "db:\"decimals\"",
+    (gogoproto.wktpointer) = true
+  ];
+}
+
+message MsgUpdateTokenResponse {}
+
+message MsgAddBridgeAddress {
+  option (cosmos.msg.v1.signer) = "creator";
+  option (amino.name) = "carbon/MsgAddBridgeAddress";
+
+  string creator = 1 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+  uint64 chain_id = 2;
+  uint64 bridge_id = 3;
+  string bridge_address = 4;
+}
+
+message MsgAddBridgeAddressResponse {
+  string id = 1;
+  Bridge bridge = 2;
+}
+
+message MsgRemoveBridgeAddress {
+  option (cosmos.msg.v1.signer) = "initiator";
+  option (amino.name) = "carbon/MsgRemoveBridgeAddress";
+
+  string initiator = 1 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+  uint64 chain_id = 2;
+  uint64 bridge_id = 3;
+  string bridge_address = 4;
+}
+
+message MsgRemoveBridgeAddressResponse {
+  string id = 1;
+  Bridge bridge = 2;
+}
+
+message MsgCreateGroup {
+  option (cosmos.msg.v1.signer) = "creator";
+  option (amino.name) = "coin/CreateGroup";
+
+  string creator = 1 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+  string name = 2;                // name of group
+  string cheque_token_symbol = 3; // symbol of the cheque token that represents
+                                  // any tokens in the group 1-to-1
+  string oracle_id = 4 [
+    (gogoproto.moretags) = "db:\"oracle_id\""
+  ]; // oracle_id that helps to get the reference price for this group
+}
+
+message MsgCreateGroupResponse {
+  TokenGroup token_group = 1 [ (gogoproto.nullable) = false ];
+}
+
+message MsgUpdateGroup {
+  option (cosmos.msg.v1.signer) = "creator";
+  option (amino.name) = "coin/UpdateGroup";
+
+  string creator = 1 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+  uint64 group_id = 2;
+  UpdateGroupParams update_group_params = 3 [ (gogoproto.nullable) = false ];
+}
+
+message UpdateGroupParams {
+  google.protobuf.StringValue name = 1 [ (gogoproto.wktpointer) = true ];
+}
+
+message MsgUpdateGroupResponse {
+  TokenGroup token_group = 1 [ (gogoproto.nullable) = false ];
+}
+
+message MsgRegisterToGroup {
+  option (cosmos.msg.v1.signer) = "creator";
+  option (amino.name) = "coin/RegisterToGroup";
+
+  string creator = 1 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+  uint64 group_id = 2;
+  string denom = 3;
+}
+
+message MsgRegisterToGroupResponse {}
+
+message MsgDeregisterFromGroup {
+  option (cosmos.msg.v1.signer) = "creator";
+  option (amino.name) = "coin/DeregisterFromGroup";
+
+  string creator = 1 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+  uint64 group_id = 2;
+  string denom = 3;
+}
+
+message MsgDeregisterFromGroupResponse {}
+
+message MsgDepositToGroup {
+  option (cosmos.msg.v1.signer) = "creator";
+  option (amino.name) = "coin/DepositToGroup";
+
+  string creator = 1 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+  cosmos.base.v1beta1.Coin deposit_coin = 2 [
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Coin",
+    (gogoproto.nullable) = false
+  ]; // the token and amount to deposit into it's group
+}
+
+message MsgDepositToGroupResponse {
+  uint64 group_id = 1 [ (gogoproto.moretags) = "db:\"group_id\"" ];
+  cosmos.base.v1beta1.Coin tokens_deposited = 2 [
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Coin",
+    (gogoproto.nullable) = false
+  ];
+  cosmos.base.v1beta1.Coin tokens_minted = 3 [
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Coin",
+    (gogoproto.nullable) = false
+  ];
+}
+
+message MsgWithdrawFromGroup {
+  option (cosmos.msg.v1.signer) = "creator";
+  option (amino.name) = "coin/WithdrawFromGroup";
+
+  string creator = 1 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+  cosmos.base.v1beta1.Coin source_coin = 2 [
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Coin",
+    (gogoproto.nullable) = false
+  ]; // the amount and denom to withdraw into
+}
+
+message MsgWithdrawFromGroupResponse {
+  uint64 group_id = 1 [ (gogoproto.moretags) = "db:\"group_id\"" ];
+  cosmos.base.v1beta1.Coin tokens_burnt = 2 [
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Coin",
+    (gogoproto.nullable) = false
+  ];
+  cosmos.base.v1beta1.Coin tokens_withdrawn = 3 [
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Coin",
+    (gogoproto.nullable) = false
+  ];
+}
+
+message MsgUpdateGroupedTokenConfig {
+  option (cosmos.msg.v1.signer) = "creator";
+  option (amino.name) = "coin/UpdateGroupedTokenConfig";
+
+  string creator = 1 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+  string denom = 2;
+  UpdateGroupedTokenConfigParams update_grouped_token_config_params = 3
+      [ (gogoproto.nullable) = false ];
+}
+
+message UpdateGroupedTokenConfigParams {
+  google.protobuf.BoolValue is_active = 1 [ (gogoproto.wktpointer) = true ];
+}
+
+message MsgUpdateGroupedTokenConfigResponse {
+  GroupedTokenConfig grouped_token_config = 1 [ (gogoproto.nullable) = false ];
+}
+
+// this line is used by starport scaffolding # proto/tx/message

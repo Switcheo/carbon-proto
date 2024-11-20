@@ -1,0 +1,62 @@
+syntax = "proto3";
+package Switcheo.carbon.evmcontract;
+
+import "gogoproto/gogo.proto";
+import "google/protobuf/wrappers.proto";
+import "cosmos/msg/v1/msg.proto";
+import "cosmos_proto/cosmos.proto";
+import "Switcheo/carbon/evmcontract/params.proto";
+import "amino/amino.proto";
+
+option go_package = "github.com/Switcheo/carbon/x/evmcontract/types";
+option (gogoproto.goproto_getters_all) = false;
+
+// Msg defines the Msg service.
+service Msg {
+  option (cosmos.msg.v1.service) = true;
+  // this line is used by starport scaffolding # proto/tx/rpc
+
+  rpc DeactivateContract(MsgDeactivateContract)
+      returns (MsgDeactivateContractResponse);
+  rpc ActivateContract(MsgActivateContract)
+      returns (MsgActivateContractResponse);
+  rpc UpdateParams(MsgUpdateParams) returns (MsgUpdateParamsResponse);
+}
+
+// this line is used by starport scaffolding # proto/tx/message
+
+message MsgDeactivateContract {
+  option (cosmos.msg.v1.signer) = "creator";
+  option (amino.name) = "evmcontract/DeactivateContract";
+
+  string creator = 1;
+  string module_name = 2;
+  string contract_address = 3;
+}
+
+message MsgDeactivateContractResponse {}
+
+message MsgActivateContract {
+  option (cosmos.msg.v1.signer) = "creator";
+  option (amino.name) = "evmcontract/ActivateContract";
+
+  string creator = 1 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+  ;
+  string module_name = 2;
+  string contract_address = 3;
+}
+
+message MsgActivateContractResponse {}
+
+message MsgUpdateParams {
+  option (cosmos.msg.v1.signer) = "authority";
+  option (amino.name) = "evmcontract/MsgUpdateParams";
+
+  // authority is the address of the governance account.
+  string authority = 1 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+
+  // params defines the optional parameters to update.
+  ParamsToUpdate params = 2 [ (gogoproto.nullable) = false ];
+}
+
+message MsgUpdateParamsResponse {}

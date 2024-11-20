@@ -1,0 +1,172 @@
+syntax = "proto3";
+package Switcheo.carbon.market;
+
+import "google/api/annotations.proto";
+import "cosmos/base/query/v1beta1/pagination.proto";
+import "cosmos_proto/cosmos.proto";
+import "gogoproto/gogo.proto";
+import "google/protobuf/wrappers.proto";
+// this line is used by starport scaffolding # 1
+import "Switcheo/carbon/market/market.proto";
+import "Switcheo/carbon/market/fee.proto";
+import "Switcheo/carbon/market/params.proto";
+
+option go_package = "github.com/Switcheo/carbon/x/market/types";
+option (gogoproto.goproto_getters_all) = false;
+
+// Query defines the gRPC querier service.
+service Query {
+  // this line is used by starport scaffolding # 2
+
+  // Get details for a market
+  rpc Market(QueryGetMarketRequest) returns (QueryGetMarketResponse) {
+    option (google.api.http).get = "/carbon/market/v1/markets/{id}";
+  }
+
+  // Get details for all markets
+  rpc MarketAll(QueryAllMarketRequest) returns (QueryAllMarketResponse) {
+    option (google.api.http).get = "/carbon/market/v1/markets";
+  }
+
+  // Get the trading fees for market and user
+  rpc TradingFees(QueryGetTradingFeesRequest)
+      returns (QueryGetTradingFeesResponse) {
+    option (google.api.http).get = "/carbon/market/v1/fees";
+  }
+
+  // Get Fee structure of the market
+  rpc FeeTiers(QueryGetFeeTiersRequest) returns (QueryGetFeeTiersResponse) {
+    option (google.api.http).get = "/carbon/market/v1/fee_tiers";
+  }
+
+  // Get all stake equivalences as an array
+  rpc StakeEquivalenceAll(QueryAllStakeEquivalenceRequest)
+      returns (QueryAllStakeEquivalenceResponse) {
+    option (google.api.http).get = "/carbon/market/v1/stake_equivalence";
+  }
+
+  rpc FeeStructuresAll(QueryAllFeeStructuresRequest)
+      returns (QueryAllFeeStructuresResponse) {
+    option (google.api.http).get = "/carbon/market/v1/fee_structures";
+  }
+
+  rpc UserFeeStructures(QueryUserFeeStructuresRequest)
+      returns (QueryUserFeeStructuresResponse) {
+    option (google.api.http).get =
+        "/carbon/market/v1/fee_structures/{user_address}";
+  }
+
+  // Parameters queries the staking parameters.
+  rpc Params(QueryParamsRequest) returns (QueryParamsResponse) {
+    option (google.api.http).get = "/carbon/market/v1/params";
+  }
+
+  // Get the controlled parameters for all markets
+  rpc ControlledParams(QueryControlledParamsRequest)
+      returns (QueryControlledParamsResponse) {
+    option (google.api.http).get = "/carbon/market/v1/controlled_params";
+  }
+
+  rpc EVMMarket(QueryEVMMarketRequest) returns (QueryEVMMarketResponse) {
+    option (google.api.http).get =
+        "/carbon/market/v1/evm/{contract_address}/{name}";
+  }
+}
+
+// this line is used by starport scaffolding # 3
+message QueryGetMarketRequest { string id = 1; }
+
+message QueryGetMarketResponse {
+  Market market_id = 1 [ (gogoproto.nullable) = false ];
+}
+
+message QueryAllMarketRequest {
+  cosmos.base.query.v1beta1.PageRequest pagination = 1;
+  google.protobuf.BoolValue is_active = 2 [ (gogoproto.wktpointer) = true ];
+}
+
+message QueryAllMarketResponse {
+  repeated Market markets = 1 [ (gogoproto.nullable) = false ];
+  cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+
+message QueryGetTradingFeesRequest {
+  string market_id = 1;
+  string user_address = 2 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+}
+message QueryGetTradingFeesResponse {
+  TradingFees fees = 1 [ (gogoproto.nullable) = false ];
+}
+
+message QueryGetFeeTiersRequest {
+  string market_type = 1;
+  string market_id = 2;
+  string user_address = 3 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+}
+message QueryGetFeeTiersResponse {
+  repeated FeeTier fee_tiers = 1 [ (gogoproto.nullable) = false ];
+}
+
+message QueryAllStakeEquivalenceRequest {
+  cosmos.base.query.v1beta1.PageRequest pagination = 1;
+}
+message QueryAllStakeEquivalenceResponse {
+  repeated StakeEquivalence stake_equivalence = 1
+      [ (gogoproto.nullable) = false ];
+  cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+
+message QueryAllFeeStructuresRequest {
+  cosmos.base.query.v1beta1.PageRequest pagination = 1;
+}
+
+message QueryAllFeeStructuresResponse {
+  repeated FeeStructure fee_structures = 1 [ (gogoproto.nullable) = false ];
+  cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+
+message QueryUserFeeStructuresRequest { string user_address = 1; }
+
+message QueryUserFeeStructuresResponse {
+  repeated FeeStructure fee_structures = 1 [ (gogoproto.nullable) = false ];
+}
+
+// QueryParamsRequest is request type for the Query/Params RPC method.
+message QueryParamsRequest {}
+
+// QueryParamsResponse is response type for the Query/Params RPC method.
+message QueryParamsResponse {
+  // params holds all the parameters of this module.
+  Params params = 1 [ (gogoproto.nullable) = false ];
+}
+
+// QueryControlledParamsRequest is request type for the Query/ControlledParams
+// RPC method.
+message QueryControlledParamsRequest {}
+
+// QueryControlledParamsResponse is response type for the Query/ControlledParams
+// RPC method.
+message QueryControlledParamsResponse {
+  // params holds all the parameters of this module.
+  ControlledParams controlled_params = 1 [ (gogoproto.nullable) = false ];
+}
+
+message QueryEVMMarketRequest {
+  string contract_address = 1;
+  string name = 2;
+}
+
+message QueryEVMMarketResponse {
+  string name = 1;
+  string display_name = 2;
+  string market_type = 3;
+  string base = 4;
+  string quote = 5;
+  int64 base_precision = 6;
+  int64 quote_precision = 7;
+  string min_quantity = 8 [
+    (gogoproto.nullable) = false,
+    (gogoproto.customtype) = "cosmossdk.io/math.Int"
+  ];
+  bool is_active = 9;
+}

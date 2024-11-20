@@ -1,0 +1,13 @@
+syntax = "proto3";
+package Switcheo.carbon.evmmerge;
+
+import "gogoproto/gogo.proto";
+import "cosmos_proto/cosmos.proto";
+
+option go_package = "github.com/Switcheo/carbon/x/evmmerge/types";
+
+message MergeAccountEvent {
+  string eth_address = 1;
+  string cosmos_address = 2 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+  bool new_cosmos_acc_created = 3;
+}

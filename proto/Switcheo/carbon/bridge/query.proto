@@ -1,0 +1,169 @@
+syntax = "proto3";
+package Switcheo.carbon.bridge;
+
+import "gogoproto/gogo.proto";
+import "google/api/annotations.proto";
+import "cosmos/base/query/v1beta1/pagination.proto";
+import "cosmos_proto/cosmos.proto";
+import "Switcheo/carbon/bridge/params.proto";
+import "Switcheo/carbon/bridge/bridge.proto";
+// this line is used by starport scaffolding # 1
+
+option go_package = "github.com/Switcheo/carbon/x/bridge/types";
+
+// Query defines the gRPC querier service.
+service Query {
+  // this line is used by starport scaffolding # 2
+  // Parameters queries the parameters of the module.
+  rpc Params(QueryParamsRequest) returns (QueryParamsResponse) {
+    option (google.api.http).get = "/carbon/bridge/v1/params";
+  }
+
+  // Get all bridge states
+  rpc BridgeStateAll(QueryAllBridgeStatesRequest)
+      returns (QueryAllBridgeStatesResponse) {
+    option (google.api.http).get = "/carbon/bridge/v1/bridge_states";
+  }
+
+  // Get all connections
+  rpc ConnectionAll(QueryAllConnectionsRequest)
+      returns (QueryAllConnectionsResponse) {
+    option (google.api.http).get = "/carbon/bridge/v1/connections";
+  }
+
+  // Get all external tokens
+  rpc ExternalTokenAll(QueryAllExternalTokensRequest)
+      returns (QueryAllExternalTokensResponse) {
+    option (google.api.http).get = "/carbon/bridge/v1/external_tokens";
+  }
+
+  rpc CarbonGmpAccount(QueryCarbonGmpAccountRequest)
+      returns (QueryCarbonGmpAccountResponse) {
+    option (google.api.http).get = "/carbon/bridge/v1/carbon_gmp_account";
+  }
+
+  rpc Relayer(QueryRelayerRequest) returns (QueryRelayerResponse) {
+    option (google.api.http).get = "/carbon/bridge/v1/relayer/{address}";
+  }
+
+  rpc RelayerAll(QueryAllRelayerRequest) returns (QueryAllRelayerResponse) {
+    option (google.api.http).get = "/carbon/bridge/v1/relayers";
+  }
+
+  rpc PendingActionNonceAll(QueryAllPendingActionNonceRequest)
+      returns (QueryAllPendingActionNonceResponse) {
+    option (google.api.http).get = "/carbon/bridge/v1/pending_action_nonce";
+  }
+
+  rpc PendingActionForNonce(QueryPendingActionRequest)
+      returns (QueryPendingActionResponse) {
+    option (google.api.http).get = "/carbon/bridge/v1/pending_action/{nonce}";
+  }
+
+  rpc ControllersForConnection(QueryControllersForConnectionRequest)
+      returns (QueryControllersForConnectionResponse) {
+    option (google.api.http).get =
+        "/carbon/bridge/v1/controllers/{connection_id}";
+  }
+
+  rpc ControllersAll(QueryAllControllersRequest)
+      returns (QueryAllControllersResponse) {
+    option (google.api.http).get = "/carbon/bridge/v1/controllers";
+  }
+}
+
+// this line is used by starport scaffolding # 3
+// QueryParamsRequest is request type for the Query/Params RPC method.
+message QueryParamsRequest {}
+
+// QueryParamsResponse is response type for the Query/Params RPC method.
+message QueryParamsResponse {
+  // params holds all the parameters of this module.
+  Params params = 1 [ (gogoproto.nullable) = false ];
+}
+
+// QueryAllBridgeStateRequest all bridge states
+message QueryAllBridgeStatesRequest {
+  cosmos.base.query.v1beta1.PageRequest pagination = 1;
+}
+
+// QueryAllBridgeStateResponse is response for the query
+message QueryAllBridgeStatesResponse {
+  // params holds all the parameters of this module.
+  repeated BridgeState bridge_states = 1 [ (gogoproto.nullable) = false ];
+  cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+
+// QueryAllConnectionsRequest all connections
+message QueryAllConnectionsRequest {
+  uint64 bridge_id = 1;
+  cosmos.base.query.v1beta1.PageRequest pagination = 2;
+}
+
+// QueryAllConnectionsResponse is response for the query
+message QueryAllConnectionsResponse {
+  repeated Connection connections = 1 [ (gogoproto.nullable) = false ];
+  cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+
+// QueryAllExternalTokensRequest all ExternalTokens
+message QueryAllExternalTokensRequest {
+  uint64 bridge_id = 1;
+  string chain_id = 2;
+  string denom = 3;
+  cosmos.base.query.v1beta1.PageRequest pagination = 4;
+}
+
+// QueryAllExternalTokensResponse is response for the query
+message QueryAllExternalTokensResponse {
+  repeated ExternalTokenMapping external_tokens = 1
+      [ (gogoproto.nullable) = false ];
+  cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+
+message QueryCarbonGmpAccountRequest {}
+
+message QueryCarbonGmpAccountResponse { string carbon_gmp_account = 1; }
+
+message QueryRelayerRequest {
+  string address = 1 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+}
+
+message QueryRelayerResponse { bool has_relayer = 1; }
+
+message QueryAllRelayerRequest {
+  cosmos.base.query.v1beta1.PageRequest pagination = 1;
+}
+
+message QueryAllRelayerResponse {
+  repeated string relayers = 1;
+  cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+
+message QueryAllPendingActionNonceRequest {
+  cosmos.base.query.v1beta1.PageRequest pagination = 1;
+}
+
+message QueryAllPendingActionNonceResponse {
+  repeated uint64 pending_action_nonces = 1;
+  cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+
+message QueryPendingActionRequest { uint64 nonce = 1; }
+
+message QueryPendingActionResponse { string action = 1; }
+
+message QueryControllersForConnectionRequest { string connection_id = 1; }
+
+message QueryControllersForConnectionResponse {
+  ControllerContracts controllers = 1 [ (gogoproto.nullable) = false ];
+}
+
+message QueryAllControllersRequest {
+  cosmos.base.query.v1beta1.PageRequest pagination = 1;
+}
+
+message QueryAllControllersResponse {
+  repeated ControllerContracts controllers = 1 [ (gogoproto.nullable) = false ];
+  cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}

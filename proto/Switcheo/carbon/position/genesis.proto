@@ -1,0 +1,16 @@
+syntax = "proto3";
+package Switcheo.carbon.position;
+
+// this line is used by starport scaffolding # genesis/proto/import
+import "Switcheo/carbon/position/position.proto";
+import "gogoproto/gogo.proto";
+
+option go_package = "github.com/Switcheo/carbon/x/position/types";
+option (gogoproto.goproto_getters_all) = false;
+
+// GenesisState defines the position module's genesis state.
+message GenesisState {
+  // this line is used by starport scaffolding # genesis/proto/state
+  // this line is used by starport scaffolding # ibc/genesis/proto
+  repeated Position open_positions = 1 [ (gogoproto.nullable) = false ];
+}

@@ -1,0 +1,71 @@
+syntax = "proto3";
+package Switcheo.carbon.perpspool;
+
+import "cosmos_proto/cosmos.proto";
+import "gogoproto/gogo.proto";
+import "Switcheo/carbon/perpspool/pool.proto";
+import "Switcheo/carbon/perpspool/market.proto";
+
+option go_package = "github.com/Switcheo/carbon/x/perpspool/types";
+option (gogoproto.goproto_getters_all) = false;
+
+message PoolEvent {
+  Pool pool = 1 [ (gogoproto.nullable) = false ];
+  string type = 2;
+}
+
+message RegisterToPoolEvent {
+  uint64 pool_id = 1;
+  string market_id = 2;
+}
+
+message DeregisterFromPoolEvent {
+  uint64 pool_id = 1;
+  string market_id = 2;
+}
+
+message SetMarketConfigEvent {
+  MarketConfig market_config = 1 [ (gogoproto.nullable) = false ];
+}
+
+message DepositToPoolEvent {
+  uint64 pool_id = 1;
+  string denom = 2;
+  string amount = 3 [
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false
+  ];
+  string share_denom = 4;
+  string share_amount = 5 [
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false
+  ];
+  string initial_share_amount_burnt = 6 [
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false
+  ];
+  string depositor = 7 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+}
+
+message WithdrawFromPoolEvent {
+  uint64 pool_id = 1;
+  string denom = 2;
+  string amount = 3 [
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false
+  ];
+  string share_denom = 4;
+  string share_amount = 5 [
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false
+  ];
+  string withdrawer = 6 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+}
+
+message UpdateMarketLiquidityUsageMultiplierEvent {
+  string market_id = 1;
+  string multiplier = 2 [
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
+    (gogoproto.nullable) = false
+  ];
+}

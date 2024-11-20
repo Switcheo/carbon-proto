@@ -1,0 +1,21 @@
+syntax = "proto3";
+package Switcheo.carbon.order;
+
+option go_package = "github.com/Switcheo/carbon/x/order/types";
+option (gogoproto.goproto_getters_all) = false;
+
+import "gogoproto/gogo.proto";
+import "Switcheo/carbon/order/order.proto";
+import "google/protobuf/timestamp.proto";
+
+message OrderEvent {
+  Order order = 1 [ (gogoproto.nullable) = false ];
+  string type = 2;
+  string allocated_margin_denom = 3;
+  string allocated_margin_amount = 4 [
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false
+  ];
+  google.protobuf.Timestamp block_created_at = 5
+      [ (gogoproto.stdtime) = true, (gogoproto.nullable) = false ];
+}

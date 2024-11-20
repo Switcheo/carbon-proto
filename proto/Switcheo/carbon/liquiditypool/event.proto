@@ -1,0 +1,149 @@
+syntax = "proto3";
+package Switcheo.carbon.liquiditypool;
+
+option go_package = "github.com/Switcheo/carbon/x/liquiditypool/types";
+option (gogoproto.goproto_getters_all) = false;
+
+import "gogoproto/gogo.proto";
+import "cosmos/base/v1beta1/coin.proto";
+import "cosmos_proto/cosmos.proto";
+import "Switcheo/carbon/liquiditypool/liquiditypool.proto";
+import "Switcheo/carbon/liquiditypool/reward.proto";
+import "google/protobuf/timestamp.proto";
+
+message PoolEvent {
+  string creator = 1 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+  Pool pool = 2 [ (gogoproto.nullable) = false ];
+  string type = 3;
+  uint64 id = 4;
+  string pool_address = 5;
+}
+
+message TotalCommitmentChangeEvent {
+  uint64 pool_id = 1;
+  string total_commitment = 2 [
+    (gogoproto.customtype) = "cosmossdk.io/math.Uint",
+    (gogoproto.nullable) = false
+  ];
+}
+
+message RewardsWeightChangeEvent {
+  uint64 pool_id = 1;
+  string rewards_weight = 2 [
+    (gogoproto.customtype) = "cosmossdk.io/math.Uint",
+    (gogoproto.nullable) = false
+  ];
+}
+
+message RewardCurveChangeEvent {
+  google.protobuf.Timestamp start_time = 1
+      [ (gogoproto.stdtime) = true, (gogoproto.nullable) = false ];
+  uint32 initial_reward_bps = 2;
+  uint32 reduction_multiplier_bps = 3;
+  uint64 reduction_interval_seconds = 4;
+  uint32 reductions = 5;
+  uint32 final_reward_bps = 6;
+}
+
+message CommitmentCurveEvent {
+  CommitmentCurve commitment_curve = 1 [ (gogoproto.nullable) = false ];
+}
+
+message CommitmentEvent {
+  uint64 pool_id = 1;
+  string address = 2;
+  Commitment commitment = 3 [ (gogoproto.nullable) = false ];
+  string type = 4;
+}
+
+message SwapEvent {
+  uint64 pool_id = 1;
+  string input = 2 [
+    (gogoproto.nullable) = false,
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Coin"
+  ];
+  string output = 3 [
+    (gogoproto.nullable) = false,
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Coin"
+  ];
+}
+
+message DepositToPoolEvent {
+  uint64 pool_id = 1;
+  string denom_a = 2;
+  string amount_a = 3 [
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false
+  ];
+  string denom_b = 4;
+  string amount_b = 5 [
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false
+  ];
+  string share_denom = 6;
+  string share_amount = 7 [
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false
+  ];
+  uint64 initial_share_amount_burned = 8;
+  string depositor = 9 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+}
+
+message WithdrawFromPoolEvent {
+  uint64 pool_id = 1;
+  string denom_a = 2;
+  string amount_a = 3 [
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false
+  ];
+  string denom_b = 4;
+  string amount_b = 5 [
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false
+  ];
+  string share_denom = 6;
+  string share_amount = 7 [
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false
+  ];
+  string withdrawer = 8 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+}
+
+message StakePoolTokenEvent {
+  uint64 pool_id = 1;
+  string denom = 2;
+  string amount = 3 [
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false
+  ];
+  string creator = 4 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+  uint64 commitment_duration = 5;
+}
+
+message UnstakePoolTokenEvent {
+  uint64 pool_id = 1;
+  string denom = 2;
+  string amount = 3 [
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false
+  ];
+  string creator = 4 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+}
+
+message RewardsAccumulatedEvent {
+  uint64 pool_id = 1 [ (gogoproto.moretags) = "yaml:\"pool_id\"" ];
+  AccumulatedRewards accumulated_rewards = 2 [
+    (gogoproto.moretags) = "yaml:\"accumulated_rewards\"",
+    (gogoproto.nullable) = false
+  ];
+}
+
+message ClaimEvent {
+  uint64 pool_id = 1 [ (gogoproto.moretags) = "yaml:\"pool_id\"" ];
+  string address = 2;
+  repeated cosmos.base.v1beta1.Coin rewards = 3 [
+    (gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.Coins",
+    (gogoproto.nullable) = false,
+    (gogoproto.moretags) = "yaml:\"rewards\""
+  ];
+}

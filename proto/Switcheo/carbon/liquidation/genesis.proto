@@ -1,0 +1,18 @@
+syntax = "proto3";
+package Switcheo.carbon.liquidation;
+
+import "gogoproto/gogo.proto";
+// this line is used by starport scaffolding # genesis/proto/import
+
+option go_package = "github.com/Switcheo/carbon/x/liquidation/types";
+option (gogoproto.goproto_getters_all) = false;
+
+import "Switcheo/carbon/liquidation/outstanding_position.proto";
+
+// GenesisState defines the liquidation module's genesis state.
+message GenesisState {
+  // this line is used by starport scaffolding # genesis/proto/state
+  // this line is used by starport scaffolding # ibc/genesis/proto
+  map<string, OutstandingPositions> outstanding_positions = 1
+      [ (gogoproto.nullable) = false ];
+}

@@ -1,0 +1,330 @@
+syntax = "proto3";
+package Switcheo.carbon.liquiditypool;
+
+import "Switcheo/carbon/liquiditypool/reward.proto";
+import "Switcheo/carbon/liquiditypool/liquiditypool.proto";
+import "Switcheo/carbon/liquiditypool/params.proto";
+import "cosmos/msg/v1/msg.proto";
+import "cosmos_proto/cosmos.proto";
+import "amino/amino.proto";
+import "gogoproto/gogo.proto";
+import "google/protobuf/timestamp.proto";
+
+option go_package = "github.com/Switcheo/carbon/x/liquiditypool/types";
+option (gogoproto.goproto_getters_all) = false;
+
+// Msg defines the Msg service.
+service Msg {
+  option (cosmos.msg.v1.service) = true;
+  // this line is used by starport scaffolding # proto/tx/rpc
+  rpc HandleCreatePool(MsgCreatePool) returns (MsgCreatePoolResponse);
+  rpc HandleCreatePoolWithLiquidity(MsgCreatePoolWithLiquidity)
+      returns (MsgCreatePoolWithLiquidityResponse);
+  rpc HandleAddLiquidity(MsgAddLiquidity) returns (MsgAddLiquidityResponse);
+  rpc HandleRemoveLiquidity(MsgRemoveLiquidity)
+      returns (MsgRemoveLiquidityResponse);
+  rpc HandleSetRewardsWeights(MsgSetRewardsWeights)
+      returns (MsgSetRewardsWeightsResponse);
+  rpc HandleStakePoolToken(MsgStakePoolToken)
+      returns (MsgStakePoolTokenResponse);
+  rpc HandleUnstakePoolToken(MsgUnstakePoolToken)
+      returns (MsgUnstakePoolTokenResponse);
+  rpc HandleClaimPoolRewards(MsgClaimPoolRewards)
+      returns (MsgClaimPoolRewardsResponse);
+  rpc HandleSetRewardCurve(MsgSetRewardCurve)
+      returns (MsgSetRewardCurveResponse);
+  rpc HandleSetCommitmentCurve(MsgSetCommitmentCurve)
+      returns (MsgSetCommitmentCurveResponse);
+  rpc HandleUpdatePool(MsgUpdatePool) returns (MsgUpdatePoolResponse);
+  rpc HandleCreatePoolRoute(MsgCreatePoolRoute)
+      returns (MsgCreatePoolRouteResponse);
+  rpc HandleRemovePoolRoute(MsgRemovePoolRoute)
+      returns (MsgRemovePoolRouteResponse);
+  rpc HandleUpdatePoolRoute(MsgUpdatePoolRoute)
+      returns (MsgUpdatePoolRouteResponse);
+  // UpdateParams defines a governance operation for updating the module
+  // parameters. The authority is hard-coded to the x/gov module account.
+  //
+  // Since: cosmos-sdk 0.47
+  rpc UpdateParams(MsgUpdateParams) returns (MsgUpdateParamsResponse);
+}
+
+// this line is used by starport scaffolding # proto/tx/message
+message MsgCreatePool {
+  option (cosmos.msg.v1.signer) = "creator";
+  option (amino.name) = "liquiditypool/CreatePool";
+
+  string creator = 1 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+  string token_a_denom = 2;
+  string token_b_denom = 3;
+  string token_a_weight = 4 [
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
+    (gogoproto.nullable) = false
+  ];
+  string token_b_weight = 5 [
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
+    (gogoproto.nullable) = false
+  ];
+  string swap_fee = 6 [
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
+    (gogoproto.nullable) = false
+  ];
+  uint64 amp_bps = 7;
+}
+
+message MsgCreatePoolResponse { uint64 pool_id = 1; }
+
+message MsgCreatePoolWithLiquidity {
+  option (cosmos.msg.v1.signer) = "creator";
+  option (amino.name) = "liquiditypool/CreatePoolWithLiquidity";
+
+  string creator = 1 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+  string token_a_denom = 2;
+  string token_b_denom = 3;
+  string token_a_weight = 4 [
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
+    (gogoproto.nullable) = false
+  ];
+  string token_b_weight = 5 [
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
+    (gogoproto.nullable) = false
+  ];
+  string amount_a = 6 [
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false
+  ];
+  string amount_b = 7 [
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false
+  ];
+  string swap_fee = 8 [
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
+    (gogoproto.nullable) = false
+  ];
+  uint64 amp_bps = 9;
+}
+
+message MsgCreatePoolWithLiquidityResponse {}
+
+message MsgAddLiquidity {
+  option (cosmos.msg.v1.signer) = "creator";
+  option (amino.name) = "liquiditypool/AddLiquidity";
+
+  string creator = 1 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+  uint64 pool_id = 2;
+  string amount_a = 3 [
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false
+  ];
+  string amount_b = 4 [
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false
+  ];
+  string min_shares = 5 [
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false
+  ];
+}
+
+message MsgAddLiquidityResponse {}
+
+message MsgRemoveLiquidity {
+  option (cosmos.msg.v1.signer) = "creator";
+  option (amino.name) = "liquiditypool/RemoveLiquidity";
+
+  string creator = 1 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+  uint64 pool_id = 2;
+  string shares = 3 [
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false
+  ];
+}
+
+message MsgRemoveLiquidityResponse {}
+
+message LinkPoolParams {
+  uint64 pool_id = 1;
+  string market_id = 2;
+}
+
+message UnlinkPoolParams { uint64 pool_id = 1; }
+
+message MsgSetRewardsWeights {
+  option (cosmos.msg.v1.signer) = "creator";
+  option (amino.name) = "liquiditypool/SetRewardsWeights";
+
+  string creator = 1 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+  SetRewardsWeightsParams set_rewards_weights_params = 2
+      [ (gogoproto.nullable) = false ];
+}
+
+message SetRewardsWeightsParams {
+  repeated RewardWeight weights = 1 [ (gogoproto.nullable) = false ];
+}
+
+message MsgSetRewardsWeightsResponse {}
+
+message MsgStakePoolToken {
+  option (cosmos.msg.v1.signer) = "creator";
+  option (amino.name) = "liquiditypool/StakePoolToken";
+
+  string creator = 1 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+  string denom = 2;
+  string amount = 3 [
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false
+  ];
+  uint64 duration = 4;
+}
+
+message MsgStakePoolTokenResponse {}
+
+message MsgUnstakePoolToken {
+  option (cosmos.msg.v1.signer) = "creator";
+  option (amino.name) = "liquiditypool/UnstakePoolToken";
+
+  string creator = 1 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+  string denom = 2;
+  string amount = 3 [
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false
+  ];
+}
+
+message MsgUnstakePoolTokenResponse {}
+
+message MsgClaimPoolRewards {
+  option (cosmos.msg.v1.signer) = "creator";
+  option (amino.name) = "liquiditypool/ClaimPoolRewards";
+
+  string creator = 1 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+  uint64 pool_id = 2;
+}
+
+message MsgClaimPoolRewardsResponse {}
+
+message MsgSetRewardCurve {
+  option (cosmos.msg.v1.signer) = "creator";
+  option (amino.name) = "liquiditypool/SetRewardCurve";
+
+  string creator = 1 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+  SetRewardCurveParams set_reward_curve_params = 2
+      [ (gogoproto.nullable) = false ];
+}
+
+message SetRewardCurveParams {
+  google.protobuf.Timestamp start_time = 1
+      [ (gogoproto.stdtime) = true, (gogoproto.nullable) = false ];
+  uint32 initial_reward_bps = 2;
+  uint32 reduction_multiplier_bps = 3;
+  uint64 reduction_interval_seconds = 4;
+  uint32 reductions = 5;
+  uint32 final_reward_bps = 6;
+}
+
+message MsgSetRewardCurveResponse {}
+
+message MsgSetCommitmentCurve {
+  option (cosmos.msg.v1.signer) = "creator";
+  option (amino.name) = "liquiditypool/SetCommitmentCurve";
+
+  string creator = 1 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+  SetCommitmentCurveParams set_commitment_curve_params = 2
+      [ (gogoproto.nullable) = false ];
+}
+
+message SetCommitmentCurveParams {
+  uint64 max_duration = 1;
+  uint32 max_reward_multiplier = 2;
+}
+
+message MsgSetCommitmentCurveResponse {}
+
+message MsgUpdatePool {
+  option (cosmos.msg.v1.signer) = "creator";
+  option (amino.name) = "liquiditypool/UpdatePool";
+
+  string creator = 1 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+  UpdatePoolParams update_pool_params = 2 [ (gogoproto.nullable) = false ];
+}
+
+message UpdatePoolParams {
+  uint64 pool_id = 1;
+  string swap_fee = 2 [
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
+    (gogoproto.nullable) = false
+  ];
+  uint64 num_quotes = 3;
+}
+
+message MsgUpdatePoolResponse {}
+
+message MsgCreatePoolRoute {
+  option (cosmos.msg.v1.signer) = "creator";
+  option (amino.name) = "liquiditypool/CreatePoolRoute";
+
+  string creator = 1 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+  CreatePoolRouteParams create_pool_route_params = 2
+      [ (gogoproto.nullable) = false ];
+}
+
+message MsgCreatePoolRouteResponse {}
+
+message CreatePoolRouteParams {
+  string market_id = 1;
+  repeated uint64 pool_ids = 2;
+  uint64 num_quotes = 3;
+}
+
+message MsgRemovePoolRoute {
+  option (cosmos.msg.v1.signer) = "creator";
+  option (amino.name) = "liquiditypool/RemovePoolRoute";
+
+  string creator = 1 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+  RemovePoolRouteParams remove_pool_route_params = 2
+      [ (gogoproto.nullable) = false ];
+}
+
+message MsgRemovePoolRouteResponse {}
+
+message RemovePoolRouteParams {
+  string market_id = 1;
+  repeated uint64 pool_ids = 2;
+}
+
+message MsgUpdatePoolRoute {
+  option (cosmos.msg.v1.signer) = "creator";
+  option (amino.name) = "liquiditypool/UpdatePoolRoute";
+
+  string creator = 1 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+  UpdatePoolRouteParams update_pool_route_params = 2
+      [ (gogoproto.nullable) = false ];
+}
+
+message MsgUpdatePoolRouteResponse {}
+
+message UpdatePoolRouteParams {
+  string market_id = 1;
+  repeated uint64 pool_ids = 2;
+  uint64 num_quotes = 3;
+}
+
+// MsgUpdateParams is the Msg/UpdateParams request type.
+//
+// Since: cosmos-sdk 0.47
+message MsgUpdateParams {
+  option (cosmos.msg.v1.signer) = "authority";
+  option (amino.name) = "liquiditypool/MsgUpdateParams";
+
+  // authority is the address of the governance account.
+  string authority = 1 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+
+  // params defines the optional parameters to update.
+  ParamsToUpdate params = 2 [ (gogoproto.nullable) = false ];
+}
+
+// MsgUpdateParamsResponse defines the response structure for executing a
+// MsgUpdateParams message.
+//
+// Since: cosmos-sdk 0.47
+message MsgUpdateParamsResponse {}

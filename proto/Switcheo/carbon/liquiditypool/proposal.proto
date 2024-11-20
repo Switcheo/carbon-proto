@@ -1,0 +1,84 @@
+syntax = "proto3";
+package Switcheo.carbon.liquiditypool;
+
+import "gogoproto/gogo.proto";
+// this line is used by starport scaffolding # proto/tx/import
+import "Switcheo/carbon/liquiditypool/tx.proto";
+
+option go_package = "github.com/Switcheo/carbon/x/liquiditypool/types";
+option (gogoproto.goproto_getters_all) = false;
+
+// do not remove this file for legacy: grpc query
+// api.carbon.network/cosmos/gov/v1/proposals needs this!!
+
+message LinkPoolProposal {
+  option (gogoproto.goproto_stringer) = false;
+
+  string title = 1;
+  string description = 2;
+  LinkPoolParams msg = 3 [ (gogoproto.nullable) = false ];
+}
+
+message UnlinkPoolProposal {
+  option (gogoproto.goproto_stringer) = false;
+
+  string title = 1;
+  string description = 2;
+  UnlinkPoolParams msg = 3 [ (gogoproto.nullable) = false ];
+}
+
+message SetRewardCurveProposal {
+  option (gogoproto.goproto_stringer) = false;
+
+  string title = 1;
+  string description = 2;
+  SetRewardCurveParams msg = 3 [ (gogoproto.nullable) = false ];
+}
+
+message SetCommitmentCurveProposal {
+  option (gogoproto.goproto_stringer) = false;
+
+  string title = 1;
+  string description = 2;
+  SetCommitmentCurveParams msg = 3 [ (gogoproto.nullable) = false ];
+}
+
+message SetRewardsWeightsProposal {
+  option (gogoproto.goproto_stringer) = false;
+
+  string title = 1;
+  string description = 2;
+  SetRewardsWeightsParams msg = 3 [ (gogoproto.nullable) = false ];
+}
+
+message UpdatePoolProposal {
+  option (gogoproto.goproto_stringer) = false;
+
+  string title = 1;
+  string description = 2;
+  UpdatePoolParams msg = 3 [ (gogoproto.nullable) = false ];
+}
+
+message CreatePoolRouteProposal {
+  option (gogoproto.goproto_stringer) = false;
+
+  string title = 1;
+  string description = 2;
+  CreatePoolRouteParams msg = 3 [ (gogoproto.nullable) = false ];
+}
+
+message RemovePoolRouteProposal {
+  option (gogoproto.goproto_stringer) = false;
+
+  string title = 1;
+  string description = 2;
+  RemovePoolRouteParams msg = 3 [ (gogoproto.nullable) = false ];
+}
+
+message UpdatePoolRouteProposal {
+  option (gogoproto.goproto_stringer) = false;
+
+  string title = 1;
+  string description = 2;
+  UpdatePoolRouteParams msg = 3 [ (gogoproto.nullable) = false ];
+}

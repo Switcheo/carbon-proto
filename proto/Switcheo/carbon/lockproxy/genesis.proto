@@ -1,0 +1,35 @@
+syntax = "proto3";
+package Switcheo.carbon.lockproxy;
+
+import "gogoproto/gogo.proto";
+import "Switcheo/carbon/lockproxy/lockproxy.proto";
+
+// this line is used by starport scaffolding # genesis/proto/import
+
+option go_package = "github.com/Switcheo/carbon/x/lockproxy/types";
+
+// GenesisState defines the lockproxy module's genesis state.
+message GenesisState {
+  option (gogoproto.goproto_getters) = false;
+
+  // An auto-incrementing nonce for withdrawals.
+  string nonce = 1 [
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false
+  ];
+
+  // Records chainIDs (value is always []byte("1") if exists)
+  map<string, bytes> chain_ids = 2;
+
+  // Records registries (value is []byte(denom))
+  map<string, bytes> registries = 3;
+
+  // Records operators (value is operator address as bytes)
+  map<string, bytes> operators = 4;
+
+  // Records wrapper mappings
+  repeated WrapperMapping wrapper_mappings = 5 [ (gogoproto.nullable) = false ];
+
+  // this line is used by starport scaffolding # genesis/proto/state
+  // this line is used by starport scaffolding # ibc/genesis/proto
+}

@@ -1,0 +1,42 @@
+syntax = "proto3";
+package Switcheo.carbon.pricing;
+
+option go_package = "github.com/Switcheo/carbon/x/pricing/types";
+option (gogoproto.goproto_getters_all) = false;
+
+import "gogoproto/gogo.proto";
+import "Switcheo/carbon/pricing/pricing.proto";
+import "google/protobuf/duration.proto";
+
+message PriceUpdateEvent {
+  PriceSet prices = 1 [ (gogoproto.nullable) = false ];
+}
+
+message TokenPriceUpdateEvent {
+  TokenPrice price = 1 [ (gogoproto.nullable) = false ];
+}
+
+message TokenPriceRemoveEvent {
+  TokenPrice price = 1 [ (gogoproto.nullable) = false ];
+}
+
+message SetImpactBandEvent {
+  uint32 impact_band = 1;
+  string type = 2;
+}
+
+message SetSmoothenBandEvent {
+  uint32 smoothen_band = 1;
+  string type = 2;
+}
+
+message SetStaleIndexAllowanceEvent {
+  google.protobuf.Duration stale_index_allowance = 1
+      [ (gogoproto.nullable) = false, (gogoproto.stdduration) = true ];
+  string type = 2;
+}
+message SetBackfillTimeIntervalEvent {
+  google.protobuf.Duration backfill_time_interval = 1
+      [ (gogoproto.nullable) = false, (gogoproto.stdduration) = true ];
+  string type = 2;
+}

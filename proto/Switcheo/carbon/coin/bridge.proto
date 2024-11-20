@@ -1,0 +1,19 @@
+syntax = "proto3";
+package Switcheo.carbon.coin;
+
+import "gogoproto/gogo.proto";
+// this line is used by starport scaffolding # proto/tx/import
+
+option go_package = "github.com/Switcheo/carbon/x/coin/types";
+option (gogoproto.goproto_getters_all) = false;
+
+message Bridge {
+  string name = 1;
+  uint64 bridge_id = 2 [ (gogoproto.moretags) = "db:\"bridge_id\"" ];
+  uint64 chain_id = 3 [ (gogoproto.moretags) = "db:\"chain_id\"" ];
+  string bridge_name = 4 [ (gogoproto.moretags) = "db:\"bridge_name\"" ];
+  string chain_name = 5 [ (gogoproto.moretags) = "db:\"chain_name\"" ];
+  bool enabled = 6;
+  repeated string bridge_addresses = 7
+      [ (gogoproto.moretags) = "db:\"bridge_addresses\"" ];
+}

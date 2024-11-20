@@ -1,0 +1,154 @@
+syntax = "proto3";
+package Switcheo.carbon.perpspool;
+
+import "gogoproto/gogo.proto";
+import "google/api/annotations.proto";
+import "cosmos/base/query/v1beta1/pagination.proto";
+import "Switcheo/carbon/perpspool/params.proto";
+import "Switcheo/carbon/perpspool/pool.proto";
+import "Switcheo/carbon/perpspool/market.proto";
+// this line is used by starport scaffolding # 1
+
+option go_package = "github.com/Switcheo/carbon/x/perpspool/types";
+option (gogoproto.goproto_getters_all) = false;
+
+// Query defines the gRPC querier service.
+service Query {
+  // Params queries the parameters of the module.
+  rpc Params(QueryParamsRequest) returns (QueryParamsResponse) {
+    option (google.api.http).get = "/carbon/perpspool/v1/params";
+  }
+
+  // Get statistical amounts for a particular pool id
+  rpc PoolInfo(QueryPoolInfoRequest) returns (QueryPoolInfoResponse) {
+    option (google.api.http).get =
+        "/carbon/perpspool/v1/pools/{pool_id}/pool_info";
+  }
+
+  // This route needs to be before Pool to get matched first
+  // Get statistical amounts for a particular pool id
+  rpc PoolInfoAll(QueryAllPoolInfoRequest) returns (QueryAllPoolInfoResponse) {
+    option (google.api.http).get = "/carbon/perpspool/v1/pools/pool_info";
+  }
+
+  // Get addresses for all pools
+  rpc PoolAddressAll(QueryAllPoolAddressRequest)
+      returns (QueryAllPoolAddressResponse) {
+    option (google.api.http).get = "/carbon/perpspool/v1/pools_addresses";
+  }
+
+  // Get markets liquidity usage multiplier for all pools-linked markets
+  rpc PoolMarketLiquidityUsageMultiplierAll(
+      QueryAllPoolMarketLiquidityUsageMultiplierRequest)
+      returns (QueryAllPoolMarketLiquidityUsageMultiplierResponse) {
+    option (google.api.http).get =
+        "/carbon/perpspool/v1/markets_liquidity_usage_multiplier";
+  }
+
+  // Get Pool details for a particular id
+  rpc Pool(QueryGetPoolRequest) returns (QueryGetPoolResponse) {
+    option (google.api.http).get = "/carbon/perpspool/v1/pools/{pool_id}";
+  }
+
+  // Get all Pool details
+  rpc PoolAll(QueryAllPoolsRequest) returns (QueryAllPoolsResponse) {
+    option (google.api.http).get = "/carbon/perpspool/v1/pools";
+  }
+
+  // Get denom => pool_id mappings
+  rpc PoolMappings(QueryPoolMappingsRequest)
+      returns (QueryPoolMappingsResponse) {
+    option (google.api.http).get = "/carbon/perpspool/v1/pool_mappings";
+  }
+
+  // this line is used by starport scaffolding # 2
+}
+
+message QueryAllPoolMarketLiquidityUsageMultiplierRequest {
+  cosmos.base.query.v1beta1.PageRequest pagination = 1;
+}
+
+message QueryAllPoolMarketLiquidityUsageMultiplierResponse {
+  repeated MarketLiquidityUsageMultiplier markets_liquidity_usage_multiplier = 1
+      [ (gogoproto.nullable) = false ];
+  cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+
+// QueryParamsRequest is request type for the Query/Params RPC method.
+message QueryParamsRequest {}
+
+// QueryParamsResponse is response type for the Query/Params RPC method.
+message QueryParamsResponse {
+  // params holds all the parameters of this module.
+  Params params = 1 [ (gogoproto.nullable) = false ];
+}
+
+message QueryGetPoolRequest { string pool_id = 1; }
+
+message QueryGetPoolResponse {
+  PoolDetails pool = 1 [ (gogoproto.nullable) = false ];
+}
+
+message QueryAllPoolsRequest {
+  cosmos.base.query.v1beta1.PageRequest pagination = 1;
+}
+
+message QueryAllPoolsResponse {
+  repeated PoolDetails pools = 1 [ (gogoproto.nullable) = false ];
+  cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+
+message QueryPoolMappingsRequest {
+  cosmos.base.query.v1beta1.PageRequest pagination = 1;
+}
+
+message QueryPoolMappingsResponse {
+  map<string, uint64> pool_mappings = 1 [ (gogoproto.nullable) = false ];
+  cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+
+message QueryAllPoolAddressRequest {
+  cosmos.base.query.v1beta1.PageRequest pagination = 1;
+}
+
+message QueryAllPoolAddressResponse {
+  map<string, string> addresses = 1;
+  cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+
+message QueryPoolInfoRequest { string pool_id = 1; }
+
+message QueryPoolInfoResponse {
+  uint64 pool_id = 1;
+  string total_share_amount = 2 [
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false
+  ];
+  string total_nav_amount = 3 [
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false
+  ];
+  string available_amount = 4 [
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false
+  ];
+  string total_in_position_amount = 5 [
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false
+  ];
+  string total_upnl_amount = 6 [
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false
+  ];
+}
+
+message QueryAllPoolInfoRequest {
+  cosmos.base.query.v1beta1.PageRequest pagination = 1;
+}
+
+message QueryAllPoolInfoResponse {
+  repeated QueryPoolInfoResponse pools = 1 [ (gogoproto.nullable) = false ];
+  cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+
+// this line is used by starport scaffolding # 3

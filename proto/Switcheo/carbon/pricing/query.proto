@@ -1,0 +1,108 @@
+syntax = "proto3";
+package Switcheo.carbon.pricing;
+
+import "gogoproto/gogo.proto";
+import "google/api/annotations.proto";
+import "cosmos/base/query/v1beta1/pagination.proto";
+// this line is used by starport scaffolding # 1
+
+import "Switcheo/carbon/pricing/pricing.proto";
+import "Switcheo/carbon/pricing/params.proto";
+
+option go_package = "github.com/Switcheo/carbon/x/pricing/types";
+option (gogoproto.goproto_getters_all) = false;
+
+// Query defines the gRPC querier service.
+service Query {
+
+  // this line is used by starport scaffolding # 2
+
+  // Get prices for a market
+  rpc PriceSet(QueryPriceSetRequest) returns (QueryPriceSetResponse) {
+    option (google.api.http).get = "/carbon/pricing/v1/prices/{market_id}";
+  }
+
+  // Get prices for all markets
+  rpc PriceSetAll(QueryAllPriceSetRequest) returns (QueryAllPriceSetResponse) {
+    option (google.api.http).get = "/carbon/pricing/v1/prices";
+  }
+
+  // Get current exchange rate between two denoms
+  rpc Rate(QueryRateRequest) returns (QueryRateResponse) {
+    option (google.api.http).get =
+        "/carbon/pricing/v1/rate/{denom_a}/{denom_b}";
+  }
+
+  // Parameters queries the pricing parameters.
+  rpc Params(QueryParamsRequest) returns (QueryParamsResponse) {
+    option (google.api.http).get = "/carbon/pricing/v1/params";
+  }
+
+  // Get index price and twap for a token
+  rpc TokenPrice(QueryTokenPriceRequest) returns (QueryTokenPriceResponse) {
+    option (google.api.http).get = "/carbon/pricing/v1/token_price/{denom}";
+  }
+
+  // Get index price and twap for all tokens
+  rpc TokenPriceAll(QueryTokenPriceAllRequest)
+      returns (QueryTokenPriceAllResponse) {
+    option (google.api.http).get = "/carbon/pricing/v1/token_price";
+  }
+}
+
+message QueryPriceTokenRequest { string denom = 1; }
+
+message QueryPriceTokenResponse {
+  TokenPrice token_price = 1 [ (gogoproto.nullable) = false ];
+}
+
+// this line is used by starport scaffolding # 3
+
+message QueryPriceSetRequest { string market_id = 1; }
+
+message QueryPriceSetResponse {
+  PriceSet prices = 1 [ (gogoproto.nullable) = false ];
+}
+
+message QueryAllPriceSetRequest {
+  cosmos.base.query.v1beta1.PageRequest pagination = 1;
+}
+
+message QueryAllPriceSetResponse {
+  repeated PriceSet prices = 1 [ (gogoproto.nullable) = false ];
+  cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+
+message QueryRateRequest {
+  string denom_a = 1;
+  string denom_b = 2;
+}
+
+message QueryRateResponse {
+  string rate = 1 [
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
+    (gogoproto.nullable) = false
+  ];
+}
+
+// QueryParamsRequest is request type for the Query/Params RPC method.
+message QueryParamsRequest {}
+
+// QueryParamsResponse is response type for the Query/Params RPC method.
+message QueryParamsResponse {
+  // params holds all the parameters of this module.
+  Params params = 1 [ (gogoproto.nullable) = false ];
+}
+
+message QueryTokenPriceRequest { string denom = 1; }
+
+message QueryTokenPriceResponse { TokenPrice token_price = 1; }
+
+message QueryTokenPriceAllRequest {
+  cosmos.base.query.v1beta1.PageRequest pagination = 1;
+}
+
+message QueryTokenPriceAllResponse {
+  repeated TokenPrice token_prices = 1;
+  cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}

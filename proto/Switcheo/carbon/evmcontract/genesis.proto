@@ -1,0 +1,19 @@
+syntax = "proto3";
+package Switcheo.carbon.evmcontract;
+
+import "Switcheo/carbon/evmcontract/params.proto";
+import "Switcheo/carbon/evmcontract/evm_hooks.proto";
+import "gogoproto/gogo.proto";
+// this line is used by starport scaffolding # genesis/proto/import
+
+option go_package = "github.com/Switcheo/carbon/x/evmcontract/types";
+
+// GenesisState defines the evm module's genesis state.
+message GenesisState {
+  // this line is used by starport scaffolding # genesis/proto/state
+  Params params = 1 [ (gogoproto.nullable) = false ];
+  repeated ModuleEVMAddress module_address_map = 2
+      [ (gogoproto.nullable) = false ];
+  repeated ModuleContracts module_contracts = 3
+      [ (gogoproto.nullable) = false ];
+}

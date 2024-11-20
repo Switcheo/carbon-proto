@@ -1,0 +1,43 @@
+syntax = "proto3";
+package Switcheo.carbon.liquidation;
+
+import "gogoproto/gogo.proto";
+import "google/api/annotations.proto";
+
+import "cosmos/base/query/v1beta1/pagination.proto";
+import "cosmos_proto/cosmos.proto";
+
+import "Switcheo/carbon/misc/trade.proto";
+
+// this line is used by starport scaffolding # 1
+
+option go_package = "github.com/Switcheo/carbon/x/liquidation/types";
+option (gogoproto.goproto_getters_all) = false;
+
+// Query defines the gRPC querier service.
+service Query {
+  // this line is used by starport scaffolding # 2
+
+  // Get liquidation history
+  rpc LiquidationAll(QueryAllLiquidationRequest)
+      returns (QueryAllLiquidationResponse) {
+    option (google.api.http).get = "/carbon/liquidation/v1/liquidations";
+  }
+}
+
+// this line is used by starport scaffolding # 3
+message QueryAllLiquidationRequest {
+  string address = 1 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+  string market_id = 2;
+  uint64 before_id = 3;
+  uint64 after_id = 4;
+  string order_id = 5;
+  uint64 after_block = 6;
+  uint64 before_block = 7;
+  cosmos.base.query.v1beta1.PageRequest pagination = 8;
+}
+
+message QueryAllLiquidationResponse {
+  repeated misc.AccountTrade trades = 1 [ (gogoproto.nullable) = false ];
+  cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}

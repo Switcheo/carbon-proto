@@ -1,0 +1,16 @@
+syntax = "proto3";
+package Switcheo.carbon.evmmerge;
+
+import "gogoproto/gogo.proto";
+import "google/api/annotations.proto";
+import "cosmos/base/query/v1beta1/pagination.proto";
+import "cosmos_proto/cosmos.proto";
+
+// this line is used by starport scaffolding # 1
+
+option go_package = "github.com/Switcheo/carbon/x/evmmerge/types";
+
+message EthCosmosAddressWrapper {
+  string eth_address = 1;
+  string cosmos_address = 2 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+}

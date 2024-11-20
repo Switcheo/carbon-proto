@@ -1,0 +1,20 @@
+syntax = "proto3";
+package Switcheo.carbon.coin;
+
+// this line is used by starport scaffolding # proto/tx/import
+import "Switcheo/carbon/coin/tx.proto";
+import "gogoproto/gogo.proto";
+
+option go_package = "github.com/Switcheo/carbon/x/coin/types";
+option (gogoproto.goproto_getters_all) = false;
+
+// do not remove this file for legacy: grpc query
+// api.carbon.network/cosmos/gov/v1/proposals needs this!!
+
+message CreateTokenProposal {
+  option (gogoproto.goproto_stringer) = false;
+
+  string title = 1;
+  string description = 2;
+  CreateTokenParams msg = 3 [ (gogoproto.nullable) = false ];
+}
